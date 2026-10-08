@@ -77,16 +77,18 @@ export const QUESTIONS: Record<ModuleId, Question[]> = {
   ],
   brief: [
     { id: 'brief_purpose', label: 'Was ist der Zweck des Projekts? Was ist bisher passiert?', type: 'textarea', section: 'Summary' },
-    { id: 'brief_know', label: 'Was sollen Menschen wissen? Welche Entscheidungen stehen an?', type: 'textarea', section: 'Summary' },
     { id: 'brief_next', label: 'Was passiert als Nächstes?', type: 'textarea', section: 'Summary' },
     { id: 'brief_values', label: 'Was ist der Organisation wichtig?', type: 'textarea', section: 'Company' },
     { id: 'brief_mission', label: 'Was versucht die Organisation zu erreichen? Was ist das übergeordnete Ziel?', type: 'textarea', section: 'Company' },
     { id: 'brief_goals', label: 'Was sind die Ziele dieses Projekts?', type: 'textarea', section: 'Company' },
     { id: 'brief_audience', label: 'Wer ist die primäre und wer die sekundäre Zielgruppe?', type: 'textarea', section: 'Audience' },
     { id: 'brief_needs', label: 'Was brauchen sie?', type: 'textarea', section: 'Audience' },
+    { id: 'brief_believe_now', label: 'Was glaubt deine Zielgruppe heute über dich? Ehrlich, auch wenn es wehtut.', type: 'textarea', section: 'Shift', placeholder: 'z.B. Judo ist was für Kinder im Verein.' },
+    { id: 'brief_believe_next', label: 'Was soll sie danach glauben, was sie heute noch nicht glaubt?', type: 'textarea', section: 'Shift', placeholder: 'z.B. Judo macht Erwachsene stärker als jedes Gym.' },
+    { id: 'brief_action', label: 'Was soll sie konkret tun? Eine Handlung, kein Gefühl.', type: 'textarea', section: 'Shift', placeholder: 'z.B. Probetraining buchen' },
+    { id: 'brief_one_thing', label: 'Wenn nur ein Satz hängen bleibt: welcher?', type: 'textarea', section: 'Shift' },
     { id: 'brief_say', label: 'Was wollen wir über das Produkt sagen?', type: 'textarea', section: 'Story' },
     { id: 'brief_narrative', label: 'Was ist das Narrativ?', type: 'textarea', section: 'Story' },
-    { id: 'brief_care', label: 'Warum sollten Menschen das interessieren?', type: 'textarea', section: 'Story' },
     { id: 'brief_improve', label: 'Wie verbessert das Produkt oder der Service das Leben der Menschen?', type: 'textarea', section: 'Story' },
     { id: 'brief_traits', label: 'Was definiert die Marke? Welche Eigenschaften hat sie?', type: 'textarea', section: 'Style' },
     { id: 'brief_voice', label: 'Wie klingt das Unternehmen? Wie kommt die Persönlichkeit durch?', type: 'textarea', section: 'Style' },
@@ -114,6 +116,30 @@ export const QUESTIONS: Record<ModuleId, Question[]> = {
     { id: 'ce_contractions', label: 'Kontraktionen?', type: 'radio', options: ['Ausschreiben', 'Erlaubt'], section: 'Spelling' },
     { id: 'ce_links', label: 'Externe Links?', type: 'radio', options: ['Neuer Tab', 'Selbes Fenster'], section: 'Formatting' },
     { id: 'ce_lists', label: 'Listen-Konventionen (Punkt am Ende? Großschreibung?)', type: 'textarea', section: 'Formatting' },
+    // Pflicht-Elemente — was in jeder Produktion drin sein muss
+    { id: 'ce_logo', label: 'Welche Logos müssen rein? Welche Version, welche Platzierung?', type: 'textarea', section: 'Pflicht-Elemente' },
+    { id: 'ce_contact', label: 'Welche Kontaktdaten oder Links müssen sichtbar sein?', type: 'textarea', section: 'Pflicht-Elemente' },
+    { id: 'ce_products', label: 'Welche Produkte müssen zu sehen sein?', type: 'textarea', section: 'Pflicht-Elemente' },
+    { id: 'ce_legal', label: 'Welche Rechtstexte oder Kennzeichnungen sind Pflicht? (z.B. Werbung/Anzeige, Bildrechte, Impressum)', type: 'textarea', section: 'Pflicht-Elemente' },
+    { id: 'ce_disclaimer', label: 'Gibt es Disclaimer oder Einschränkungen für Text oder Bild?', type: 'textarea', section: 'Pflicht-Elemente' },
+  ],
+  deepdive: [
+    // Herkunft
+    { id: 'dd_origin', label: 'Das Problem, das zur Gründung geführt hat: Gibt es das heute noch?', type: 'textarea', section: 'Herkunft' },
+    { id: 'dd_folklore', label: 'Welche Geschichten erzählt man sich bei euch intern? Folklore, Rituale, Running Gags?', type: 'textarea', section: 'Herkunft' },
+    { id: 'dd_never', label: 'Was würdet ihr nie anbieten, auch nicht für viel Geld?', type: 'textarea', section: 'Herkunft' },
+    { id: 'dd_vulnerability', label: 'Was ist eure größte Schwachstelle?', type: 'textarea', section: 'Herkunft' },
+    // Wahrnehmung
+    { id: 'dd_misperception', label: 'Was ist das größte Missverständnis über eure Marke?', type: 'textarea', section: 'Wahrnehmung' },
+    { id: 'dd_associations', label: 'Welche Wörter oder Bilder haben Menschen im Kopf, wenn sie euren Namen hören? Woher kommen die?', type: 'textarea', section: 'Wahrnehmung' },
+    { id: 'dd_not_buy', label: 'Wer soll euer Produkt nicht kaufen?', type: 'textarea', section: 'Wahrnehmung' },
+    // Rolle im Leben
+    { id: 'dd_without', label: 'Wie sähe der Alltag eurer Kundschaft aus, wenn es euch morgen nicht mehr gäbe?', type: 'textarea', section: 'Rolle im Leben' },
+    { id: 'dd_dropout', label: 'Wo springen Interessierte kurz vor dem Kauf oder der Buchung ab? Warum?', type: 'textarea', section: 'Rolle im Leben' },
+    // Wettbewerb
+    { id: 'dd_alternatives', label: 'Was nutzen Menschen statt euch, auch außerhalb eurer Branche?', type: 'textarea', section: 'Wettbewerb' },
+    { id: 'dd_competitor_credit', label: 'Wofür ist die Konkurrenz bekannt, wofür ihr auch Credit haben wollt?', type: 'textarea', section: 'Wettbewerb' },
+    { id: 'dd_momentum', label: 'Wer hat in eurer Kategorie gerade Momentum? Woran liegt das?', type: 'textarea', section: 'Wettbewerb' },
   ],
 };
 

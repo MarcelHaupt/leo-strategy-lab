@@ -1,5 +1,6 @@
 import type { SessionState, LeoCommentItem, Hook, FormatRecommendation, Persona, TrackId } from './types';
 import { PRINCIPLES } from './playbook';
+import { provocations } from './leo-provocations';
 
 const TRACK_HOOK_BIAS: Record<TrackId, { formats: string[]; principles: string[] }> = {
   founder:  { formats: ['Reel', 'Story', 'POV-Video'],            principles: ['P22', 'P07', 'P25'] },
@@ -164,7 +165,17 @@ export function leoComments(s: SessionState): LeoCommentItem[] {
     });
   }
 
-  return out.slice(0, 8);
+  const folklore = (s.modules.deepdive?.answers.dd_folklore as string) ?? '';
+  if (folklore.trim().split(/\s+/).length >= 8) {
+    out.push({
+      tone: 'praise',
+      text: 'Folklore gefunden. Das ist Content, den keine Konkurrenz kopieren kann. P16.',
+      principleId: 'P16',
+    });
+  }
+
+  // Leo stört: höchstens 2 Stör-Fragen, immer am Ende
+  return [...out.slice(0, 6), ...provocations(s, 'overview', 2)];
 }
 
 // 4. Verdichtung
@@ -189,7 +200,15 @@ export function compressPersona(s: SessionState): Persona {
     starter.mission_why as string,
   ]);
 
-  return { oneLiner, voice, avoid, audience, promise };
+  const brief = s.modules.brief?.answers ?? {};
+  const shift = {
+    now: firstSentence((brief.brief_believe_now as string) ?? ''),
+    next: firstSentence((brief.brief_believe_next as string) ?? ''),
+    action: firstSentence((brief.brief_action as string) ?? ''),
+    oneThing: firstSentence((brief.brief_one_thing as string) ?? ''),
+  };
+
+  return { oneLiner, voice, avoid, audience, promise, shift };
 }
 
 function compress(parts: (string | undefined)[]): string {
@@ -400,14 +419,66 @@ export function deriveHooks(s: SessionState): Hook[] {
     ],
   };
 
-  const hooks = s.track ? trackHooks[s.track] : trackHooks.product;
+  const base = s.track ? trackHooks[s.track] : trackHooks.product;
 
   // Inject voice if present
-  if (persona.voice.length > 0 && hooks[2]) {
-    hooks[2].reason += ` Voice: ${persona.voice.slice(0, 3).join(', ')}.`;
+  if (persona.voice.length > 0 && base[2]) {
+    base[2].reason += ` Voice: ${persona.voice.slice(0, 3).join(', ')}.`;
   }
 
-  return hooks;
+  // Hooks aus Shift und Deep-Dive kommen zuerst — sie stammen aus echten Antworten
+  return [...insightHooks(s, persona.shift, clientName), ...base].slice(0, 5);
+}
+
+function insightHooks(s: SessionState, shift: Persona['shift'], clientName: string): Hook[] {
+  const dd = s.modules.deepdive?.answers ?? {};
+  const misperception = firstSentence((dd.dd_misperception as string) ?? '');
+  const folklore = firstSentence((dd.dd_folklore as string) ?? '');
+  const out: Hook[] = [];
+
+  if (shift.now) {
+    out.push({
+      hook: `Alle denken: ${stripEnd(shift.now)}. Stimmt nicht.`,
+      format: 'Reel',
+      platform: ['Instagram Reels', 'TikTok'],
+      principleId: 'P24',
+      reason: shift.next
+        ? `Shift statt Claim: erst das Vorurteil aussprechen, dann brechen. Danach soll hängen bleiben: ${stripEnd(shift.next)}.`
+        : 'Shift statt Claim: erst das Vorurteil aussprechen, dann brechen.',
+    });
+  }
+  if (misperception) {
+    out.push({
+      hook: `Das größte Missverständnis über ${clientName}: ${stripEnd(misperception).replace(/^Dass /, 'dass ')}.`,
+      format: 'Reel',
+      platform: ['TikTok', 'Instagram Reels'],
+      principleId: 'P11',
+      reason: 'Ein Missverständnis offen aussprechen holt die Kommentare, die du sonst nie bekommst.',
+    });
+  }
+  if (folklore) {
+    out.push({
+      hook: `Die Geschichte, die man sich bei ${clientName} intern erzählt.`,
+      format: 'Story-Reihe',
+      platform: ['Instagram Stories', 'TikTok'],
+      principleId: 'P16',
+      reason: `Insider Codes: Folklore macht aus Followern Eingeweihte. Material: ${stripEnd(folklore)}.`,
+    });
+  }
+  if (shift.oneThing) {
+    out.push({
+      hook: stripEnd(shift.oneThing) + '.',
+      format: 'Carousel',
+      platform: ['Instagram', 'LinkedIn'],
+      principleId: 'P03',
+      reason: 'Der eine Satz gehört in Frame 1, nicht ans Ende.',
+    });
+  }
+  return out.slice(0, 3);
+}
+
+function stripEnd(t: string): string {
+  return t.trim().replace(/[.!?…]+$/, '');
 }
 
 // 6. Format-Empfehlungen — track-aware

@@ -291,4 +291,5 @@ export const MODULE_PRINCIPLES: Record<string, string[]> = {
   brief: ['P04', 'P05', 'P09', 'P10', 'P20'],
   style: ['P14', 'P15', 'P16'],
   copyedit: ['P13', 'P25'],
+  deepdive: ['P16', 'P24', 'P12', 'P05'],
 };

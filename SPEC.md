@@ -618,3 +618,10 @@ Schnellstart nach `leo-tiny-framework.md`, läuft neben den 7 Modulen und brauch
 - **07 Strategy Paper**: Vorschau + Export `.md` / `.json`. Leere Felder übernehmen Leos Entwurf.
 
 Code: `lib/tiny-engine.ts` (deterministisch), `lib/tiny-export.ts`, `pages/Tiny.tsx`, State unter `SessionState.tiny`.
+
+## Erweiterungen Oktober 2026
+
+- **Shift** (Brief-Sektion + Tiny Step 02): `brief_believe_now`, `brief_believe_next`, `brief_action`, `brief_one_thing` bzw. `tiny.shiftNow/Next/Action/OneThing`. Ersetzt `brief_know` und `brief_care`. Erscheint in der Persona (Report), im Export und erzeugt den ersten Hook („Alle denken: … Stimmt nicht.“, P24).
+- **Leo stört** (`lib/leo-provocations.ts`): ca. 20 Stör-Fragen als Kommentar-Typ `question`. Jede Frage hat eine Bedingung, max. 2 gleichzeitig. Sichtbar in Modul-Seitenleiste, Übersicht/Report und Tiny.
+- **Modul 08 Business Deep-Dive** (`deepdive`): 12 Fragen, optional, nur Tracks Agency und Brand Refresh. Missverständnis und Folklore erzeugen eigene Hooks (P11, P16).
+- **Pflicht-Elemente** im Copyediting: Logo, Kontakt, Produkte, Rechtstexte/Kennzeichnung, Disclaimer.

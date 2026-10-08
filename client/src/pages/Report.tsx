@@ -107,6 +107,22 @@ export default function Report() {
             <Block label="AUDIENCE" value={persona.audience} />
             <Block label="PROMISE" value={persona.promise} />
           </div>
+          {(persona.shift.now || persona.shift.next) && (
+            <div className="border-l-2 border-primary pl-5 space-y-4" data-testid="block-shift">
+              <div className="text-tag text-muted-foreground">SHIFT</div>
+              <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] gap-3 sm:items-baseline">
+                <p className="font-serif text-xl leading-snug text-muted-foreground">{persona.shift.now || '—'}</p>
+                <span className="font-mono text-primary">→</span>
+                <p className="font-serif text-xl leading-snug">{persona.shift.next || '—'}</p>
+              </div>
+              {persona.shift.action && (
+                <p className="text-sm"><span className="text-tag text-muted-foreground mr-2">HANDLUNG</span>{persona.shift.action}</p>
+              )}
+              {persona.shift.oneThing && (
+                <p className="text-sm"><span className="text-tag text-muted-foreground mr-2">DER EINE SATZ</span>{persona.shift.oneThing}</p>
+              )}
+            </div>
+          )}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             <Block label="VOICE" value={persona.voice.join(', ') || '—'} />
             <Block label="VERMEIDEN" value={persona.avoid.join(', ') || '—'} />

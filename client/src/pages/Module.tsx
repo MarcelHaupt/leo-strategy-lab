@@ -10,6 +10,8 @@ import { MadLibsBlock } from '@/components/MadLibsBlock';
 import { CaseStudyList } from '@/components/CaseStudyList';
 import { StyleAttributePicker } from '@/components/StyleAttributePicker';
 import { Button } from '@/components/ui/button';
+import { LeoComment } from '@/components/LeoComment';
+import { provocations } from '@/lib/leo-provocations';
 
 const VALID_IDS: ModuleId[] = MODULE_ORDER;
 
@@ -181,7 +183,20 @@ export default function Module() {
         {/* Side panel */}
         <div className="lg:col-span-4">
           <div className="lg:sticky lg:top-24">
-            <PrinciplesPanel moduleId={id!} />
+            <div className="space-y-8">
+              <PrinciplesPanel moduleId={id!} />
+              {(() => {
+                const qs = provocations(state, id!, 2);
+                return qs.length > 0 ? (
+                  <div className="space-y-3" data-testid="panel-provocations">
+                    <div className="text-tag text-muted-foreground border-b border-border pb-2">Leo stört</div>
+                    {qs.map((c, i) => (
+                      <LeoComment key={i} item={c} />
+                    ))}
+                  </div>
+                ) : null;
+              })()}
+            </div>
           </div>
         </div>
       </div>

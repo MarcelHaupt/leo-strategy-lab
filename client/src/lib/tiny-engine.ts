@@ -4,6 +4,7 @@
 
 import type { TinyState, TinyGoal, ProblemType, CrispKey, LeoCommentItem } from './types';
 import { PRINCIPLES, PRINCIPLES_BY_ID } from './playbook';
+import { tinyProvocations } from './leo-provocations';
 
 // ---------- Stammdaten ----------
 
@@ -192,6 +193,12 @@ export function tinyHooks(t: TinyState, projectName = ''): TinyHook[] {
   const order = [...activePrinciples(t), ...suggestPrinciples(t).map((s) => s.id)];
   const seen = new Set<string>();
   const out: TinyHook[] = [];
+  // Shift-Hook zuerst: das Vorurteil der Zielgruppe aussprechen und brechen (ersetzt die P24-Vorlage)
+  const now = clean(t.shiftNow);
+  if (now) {
+    seen.add('P24');
+    out.push({ principleId: 'P24', hook: `Alle denken: ${now}. Stimmt nicht.`, emotion: 'Ertapptsein', mechanic: 'Kommentar / Stitch' });
+  }
   for (const id of order) {
     if (seen.has(id) || !HOOKS[id]) continue;
     seen.add(id);
@@ -315,11 +322,16 @@ export function crispDrafts(t: TinyState, projectName = ''): Record<CrispKey, st
     r: [
       `- Plattform: ${t.platforms.length ? t.platforms.join(', ') : 'offen'}${isShortForm(t) ? ', 9:16' : ''}`,
       `- Zielgruppe: ${clean(t.audience) || 'offen'}`,
-      `- Erfolg: ${t.goal ? KPIS[t.goal] : 'offen — erst Ziel festlegen'}`,
+      `- Erfolg: ${t.goal ? KPIS[t.goal] : 'offen — erst Ziel festlegen'}${clean(t.shiftAction) ? `. Handlung: ${clean(t.shiftAction)}` : ''}`,
     ].join('\n'),
-    i: f1
-      ? `Kein Einzelpost, sondern ein Format: ${f1.name} auf ${platformLabel(t)}. Leitplanken: ${pLine}.`
-      : `Leitplanken: ${pLine}.`,
+    i: [
+      clean(t.shiftNow) && clean(t.shiftNext) ? `Shift: von „${clean(t.shiftNow)}“ zu „${clean(t.shiftNext)}“.` : '',
+      f1
+        ? `Kein Einzelpost, sondern ein Format: ${f1.name} auf ${platformLabel(t)}. Leitplanken: ${pLine}.`
+        : `Leitplanken: ${pLine}.`,
+    ]
+      .filter(Boolean)
+      .join(' '),
     s: [
       `1. Hook-Test: „${hooks[0]?.hook ?? 'Hook 1'}“ in 3 Varianten als Rohschnitt — Owner: offen — bis ${addDays(2)}`,
       `2. Pilot: erste Folge „${f1?.name ?? 'Format'}“ drehen und posten — Owner: offen — bis ${addDays(7)}`,
@@ -371,7 +383,7 @@ export function tinyChecks(t: TinyState): LeoCommentItem[] {
   if (t.problemIssue.trim() && t.problemBecause.trim() && out.every((c) => c.tone !== 'flag')) {
     out.push({ tone: 'praise', text: 'Problem mit BECAUSE steht. Damit kann man arbeiten.' });
   }
-  return out;
+  return [...out, ...tinyProvocations(t, 2)];
 }
 
 // ---------- Fortschritt ----------

@@ -41,6 +41,14 @@ export function toMarkdown(s: SessionState): string {
   lines.push(`**Voice:** ${persona.voice.join(', ') || '—'}`);
   lines.push(`**Vermeiden:** ${persona.avoid.join(', ') || '—'}`);
   lines.push('');
+  if (persona.shift.now || persona.shift.next) {
+    lines.push('## Shift');
+    lines.push(`**Heute glauben sie:** ${persona.shift.now || '—'}  `);
+    lines.push(`**Danach sollen sie glauben:** ${persona.shift.next || '—'}  `);
+    if (persona.shift.action) lines.push(`**Handlung:** ${persona.shift.action}  `);
+    if (persona.shift.oneThing) lines.push(`**Der eine Satz:** ${persona.shift.oneThing}`);
+    lines.push('');
+  }
   lines.push('---');
   lines.push('');
 

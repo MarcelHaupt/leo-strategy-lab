@@ -225,7 +225,7 @@ export default function Tiny() {
           </Step>
 
           {/* 02 Problem */}
-          <Step n="02" title={<>Problem-<span className="italic text-primary">Frame</span></>} sub="Business-Issue + BECAUSE, ein Satz">
+          <Step n="02" title={<>Problem-<span className="italic text-primary">Frame</span></>} sub="Business-Issue + BECAUSE, dann der Shift">
             <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-3 md:items-end">
               <div>
                 <FieldLabel htmlFor="tiny-issue">Business-Issue</FieldLabel>
@@ -279,6 +279,37 @@ export default function Tiny() {
                 {sentence}
               </blockquote>
             )}
+
+            <div className="space-y-4 pt-2">
+              <div>
+                <div className="text-tag text-foreground">Shift</div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Optional, aber der stärkste Hebel für die Hooks: Was glauben sie heute, was sollen sie danach glauben und tun?
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {(
+                  [
+                    ['shiftNow', 'Heute glauben sie …', 'z.B. Judo ist was für Kinder im Verein'],
+                    ['shiftNext', 'Danach glauben sie …', 'z.B. Judo macht Erwachsene stärker als jedes Gym'],
+                    ['shiftAction', 'Sie sollen …', 'z.B. ein Probetraining buchen'],
+                    ['shiftOneThing', 'Der eine Satz, der hängen bleibt', 'z.B. Fallen lernen ist Aufstehen lernen'],
+                  ] as const
+                ).map(([key, label, ph]) => (
+                  <div key={key}>
+                    <FieldLabel htmlFor={`tiny-${key}`}>{label}</FieldLabel>
+                    <Input
+                      id={`tiny-${key}`}
+                      value={t[key]}
+                      onChange={(e) => set({ [key]: e.target.value } as Partial<TinyState>)}
+                      placeholder={ph}
+                      className={fieldCls}
+                      data-testid={`input-tiny-${key}`}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
           </Step>
 
           {/* 03 Playbook */}
@@ -569,6 +600,19 @@ function StrategyPaper() {
           <div>
             <div className="text-tag text-muted-foreground mb-2">Problem{t.problemType ? ` · ${t.problemType}` : ''}</div>
             <p className="font-serif text-2xl leading-snug">{sentence}</p>
+          </div>
+        )}
+
+        {(t.shiftNow.trim() || t.shiftNext.trim()) && (
+          <div data-testid="paper-tiny-shift">
+            <div className="text-tag text-muted-foreground mb-2">Shift</div>
+            <p className="font-serif text-xl leading-snug">
+              <span className="text-muted-foreground">{t.shiftNow.trim() || '—'}</span>
+              <span className="font-mono text-primary mx-3">→</span>
+              {t.shiftNext.trim() || '—'}
+            </p>
+            {t.shiftAction.trim() && <p className="text-sm mt-2">Handlung: {t.shiftAction.trim()}</p>}
+            {t.shiftOneThing.trim() && <p className="text-sm mt-1">Der eine Satz: {t.shiftOneThing.trim()}</p>}
           </div>
         )}
 

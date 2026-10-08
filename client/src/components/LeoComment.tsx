@@ -4,12 +4,14 @@ const ICONS: Record<LeoCommentItem['tone'], string> = {
   praise: '✓',
   flag: '!',
   idea: '*',
+  question: '?',
 };
 
 const LABELS: Record<LeoCommentItem['tone'], string> = {
   praise: 'LEO LOBT',
   flag: 'LEO STOPPT',
   idea: 'LEO IDEE',
+  question: 'LEO STÖRT',
 };
 
 export function LeoComment({ item }: { item: LeoCommentItem }) {
@@ -20,7 +22,9 @@ export function LeoComment({ item }: { item: LeoCommentItem }) {
           ? 'border-primary'
           : item.tone === 'flag'
             ? 'border-destructive'
-            : 'border-accent'
+            : item.tone === 'question'
+              ? 'border-foreground'
+              : 'border-accent'
       }`}
       data-testid={`leo-comment-${item.tone}`}
     >
@@ -31,7 +35,9 @@ export function LeoComment({ item }: { item: LeoCommentItem }) {
               ? 'text-primary'
               : item.tone === 'flag'
                 ? 'text-destructive'
-                : 'text-accent'
+                : item.tone === 'question'
+                  ? 'text-foreground'
+                  : 'text-accent'
           }`}
         >
           {ICONS[item.tone]} {LABELS[item.tone]}
@@ -40,7 +46,9 @@ export function LeoComment({ item }: { item: LeoCommentItem }) {
           <span className="font-mono text-tag text-muted-foreground">{item.principleId}</span>
         )}
       </div>
-      <p className="font-sans text-sm mt-1 leading-relaxed">{item.text}</p>
+      <p className={`text-sm mt-1 leading-relaxed ${item.tone === 'question' ? 'font-serif italic text-base' : 'font-sans'}`}>
+        {item.text}
+      </p>
     </div>
   );
 }

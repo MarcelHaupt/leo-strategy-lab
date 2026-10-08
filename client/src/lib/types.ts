@@ -5,7 +5,8 @@ export type ModuleId =
   | 'casestudy'
   | 'brief'
   | 'style'
-  | 'copyedit';
+  | 'copyedit'
+  | 'deepdive';
 
 export const MODULE_ORDER: ModuleId[] = [
   'starter',
@@ -15,6 +16,7 @@ export const MODULE_ORDER: ModuleId[] = [
   'brief',
   'style',
   'copyedit',
+  'deepdive',
 ];
 
 export const MODULE_META: Record<
@@ -52,9 +54,9 @@ export const MODULE_META: Record<
   brief: {
     number: '05',
     title: 'Project Brief',
-    subtitle: 'Summary, Company, Audience, Story, Style',
+    subtitle: 'Summary, Company, Audience, Shift, Story, Style',
     description:
-      'Das klassische Briefing. Verdichtet und auf den Punkt.',
+      'Das klassische Briefing, verdichtet. Dazu der Shift: Was glauben sie heute, was sollen sie danach glauben und tun?',
   },
   style: {
     number: '06',
@@ -68,7 +70,14 @@ export const MODULE_META: Record<
     title: 'Copyediting Checklist',
     subtitle: 'Style-Guide-Entscheidungen',
     description:
-      'Damit Texte konsistent sind. Punkte in Akronymen, Datumsformate, Oxford-Komma — der ganze Kram.',
+      'Damit Texte konsistent sind. Punkte in Akronymen, Datumsformate, Oxford-Komma — der ganze Kram. Dazu die Pflicht-Elemente für die Produktion.',
+  },
+  deepdive: {
+    number: '08',
+    title: 'Business Deep-Dive',
+    subtitle: 'Folklore, Missverständnisse, Momentum',
+    description:
+      'Optional. Zwölf Fragen für Marken mit Geschichte. Hier liegt das Material, das keine Konkurrenz kopieren kann.',
   },
 };
 
@@ -115,7 +124,7 @@ export const TRACKS: Record<TrackId, {
     name: 'Founder Brand',
     subtitle: 'Solo, Coach, Personal Brand, Athlet',
     description: 'Eine Person ist die Marke. Du verkaufst dich selbst — deine Erfahrung, deine Haltung, deine Stimme.',
-    questionCount: 28,
+    questionCount: 35,
   },
   product: {
     id: 'product',
@@ -123,7 +132,7 @@ export const TRACKS: Record<TrackId, {
     name: 'Product Launch',
     subtitle: 'App, Tool, physisches Produkt, SaaS',
     description: 'Etwas Neues kommt auf den Markt. Hartes Was, klare Zielgruppe, klarer Use-Case.',
-    questionCount: 42,
+    questionCount: 49,
   },
   agency: {
     id: 'agency',
@@ -131,7 +140,7 @@ export const TRACKS: Record<TrackId, {
     name: 'Agency / Studio',
     subtitle: 'Dienstleister, Kreativbüro, Beratung',
     description: 'Du verkaufst Expertise, nicht Stückgut. Case Studies, Pitch-Logik, Nischen-Autorität.',
-    questionCount: 35,
+    questionCount: 42,
   },
   refresh: {
     id: 'refresh',
@@ -139,7 +148,7 @@ export const TRACKS: Record<TrackId, {
     name: 'Brand Refresh',
     subtitle: 'Etablierte Marke, Repositioning, Audit',
     description: 'Existiert schon, will sich neu sortieren. Hat Daten, hat Geschichte, hat Altlasten.',
-    questionCount: 45,
+    questionCount: 52,
   },
 };
 
@@ -159,6 +168,10 @@ export type TinyState = {
   problemBecause: string;
   problemType: ProblemType | '';
   principles: string[];
+  shiftNow: string;
+  shiftNext: string;
+  shiftAction: string;
+  shiftOneThing: string;
   passedHooks: string[]; // principleIds der Hooks, die den Group-Chat-Test bestehen
   crisp: Record<CrispKey, string>;
   next72: string;
@@ -185,7 +198,7 @@ export type Principle = {
 };
 
 export type LeoCommentItem = {
-  tone: 'praise' | 'flag' | 'idea';
+  tone: 'praise' | 'flag' | 'idea' | 'question';
   text: string;
   principleId?: string;
 };
@@ -213,4 +226,13 @@ export type Persona = {
   avoid: string[];
   audience: string;
   promise: string;
+  shift: Shift;
+};
+
+/** Shift: was die Zielgruppe heute glaubt → was sie danach glauben und tun soll */
+export type Shift = {
+  now: string;
+  next: string;
+  action: string;
+  oneThing: string;
 };

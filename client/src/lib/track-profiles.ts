@@ -4,8 +4,8 @@ import type { TrackId, ModuleId } from './types';
 export const MODULES_PER_TRACK: Record<TrackId, ModuleId[]> = {
   founder:  ['starter', 'madlibs',                          'brief', 'style', 'copyedit'],
   product:  ['starter', 'madlibs', 'product',               'brief', 'style', 'copyedit'],
-  agency:   ['starter', 'madlibs', 'product', 'casestudy',  'brief', 'style', 'copyedit'],
-  refresh:  ['starter', 'madlibs', 'product', 'casestudy',  'brief', 'style', 'copyedit'],
+  agency:   ['starter', 'madlibs', 'product', 'casestudy',  'brief', 'style', 'copyedit', 'deepdive'],
+  refresh:  ['starter', 'madlibs', 'product', 'casestudy',  'brief', 'style', 'copyedit', 'deepdive'],
 };
 
 // Welche Fragen-IDs sind pro Track in einem Modul relevant?
@@ -21,13 +21,15 @@ export const QUESTION_VISIBILITY: Record<TrackId, Record<ModuleId, string[] | 'A
     product: [],
     casestudy: [],
     brief: [
-      'brief_purpose','brief_know','brief_next',
+      'brief_purpose','brief_next',
       'brief_audience','brief_needs',
-      'brief_say','brief_narrative','brief_care',
+      'brief_believe_now','brief_believe_next','brief_action','brief_one_thing',
+      'brief_say','brief_narrative',
       'brief_traits','brief_voice','brief_tone',
     ],
     style: 'ALL',
     copyedit: 'ALL',
+    deepdive: [],
   },
   product: {
     starter: [
@@ -43,6 +45,7 @@ export const QUESTION_VISIBILITY: Record<TrackId, Record<ModuleId, string[] | 'A
     brief: 'ALL',
     style: 'ALL',
     copyedit: 'ALL',
+    deepdive: [],
   },
   agency: {
     starter: [
@@ -61,6 +64,7 @@ export const QUESTION_VISIBILITY: Record<TrackId, Record<ModuleId, string[] | 'A
     brief: 'ALL',
     style: 'ALL',
     copyedit: 'ALL',
+    deepdive: 'ALL',
   },
   refresh: {
     starter: 'ALL',
@@ -70,6 +74,7 @@ export const QUESTION_VISIBILITY: Record<TrackId, Record<ModuleId, string[] | 'A
     brief: 'ALL',
     style: 'ALL',
     copyedit: 'ALL',
+    deepdive: 'ALL',
   },
 };
 

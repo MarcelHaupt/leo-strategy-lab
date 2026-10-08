@@ -50,6 +50,14 @@ export function tinyToMarkdown(s: SessionState): string {
   L.push(problemSentence(t) || '—');
   if (t.problemType) L.push(`_Problemtyp: ${t.problemType}_`);
   L.push('');
+  if (t.shiftNow.trim() || t.shiftNext.trim()) {
+    L.push('## Shift');
+    L.push(`**Heute glauben sie:** ${t.shiftNow.trim() || '—'}  `);
+    L.push(`**Danach sollen sie glauben:** ${t.shiftNext.trim() || '—'}  `);
+    if (t.shiftAction.trim()) L.push(`**Handlung:** ${t.shiftAction.trim()}  `);
+    if (t.shiftOneThing.trim()) L.push(`**Der eine Satz:** ${t.shiftOneThing.trim()}`);
+    L.push('');
+  }
   L.push('## Playbook-Leitplanken');
   principles.forEach((id) => {
     const p = PRINCIPLES_BY_ID[id];
