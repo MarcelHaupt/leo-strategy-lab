@@ -9,6 +9,8 @@ import {
   risks,
 } from './leo-engine';
 import { PRINCIPLES_BY_ID } from './playbook';
+import { sessionTrends } from './trend-context';
+import { TREND_DOMAINS, formatSourceDate } from './trends';
 
 export function toJSON(s: SessionState): string {
   return JSON.stringify(s, null, 2);
@@ -73,6 +75,21 @@ export function toMarkdown(s: SessionState): string {
     lines.push(`- Prinzipien: ${f.principles.join(', ')}`);
     lines.push('');
   });
+
+  // Trend-Kontext
+  const trends = sessionTrends(s, 4);
+  if (trends.length > 0) {
+    lines.push('## Trend-Kontext');
+    trends.forEach(({ signal: t }) => {
+      lines.push(`### ${t.title} (${TREND_DOMAINS[t.domain]})`);
+      lines.push(t.insight);
+      lines.push(`- So nutzt du es: ${t.move}`);
+      lines.push(`- Finger weg: ${t.skip}`);
+      lines.push(`- Prinzipien: ${t.principles.join(', ')}`);
+      lines.push(`- Quelle: ${t.sources.map((src) => `[${src.label}](${src.url}), ${formatSourceDate(src.date)}`).join('; ')}`);
+      lines.push('');
+    });
+  }
 
   // Risks
   lines.push('## Risiken & Schwachstellen');

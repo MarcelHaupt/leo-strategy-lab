@@ -73,6 +73,15 @@ export function SessionHeader() {
               Tiny
             </a>
           </Link>
+          <Link href="/trends" data-testid="link-trends">
+            <a
+              className={`px-3 py-2 hover-elevate ${
+                location.startsWith('/trends') ? 'text-primary' : 'text-muted-foreground'
+              }`}
+            >
+              Trends
+            </a>
+          </Link>
           <Link href="/about" data-testid="link-about">
             <a
               className={`px-3 py-2 hover-elevate ${

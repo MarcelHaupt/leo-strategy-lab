@@ -625,3 +625,10 @@ Code: `lib/tiny-engine.ts` (deterministisch), `lib/tiny-export.ts`, `pages/Tiny.
 - **Leo stört** (`lib/leo-provocations.ts`): ca. 20 Stör-Fragen als Kommentar-Typ `question`. Jede Frage hat eine Bedingung, max. 2 gleichzeitig. Sichtbar in Modul-Seitenleiste, Übersicht/Report und Tiny.
 - **Modul 08 Business Deep-Dive** (`deepdive`): 12 Fragen, optional, nur Tracks Agency und Brand Refresh. Missverständnis und Folklore erzeugen eigene Hooks (P11, P16).
 - **Pflicht-Elemente** im Copyediting: Logo, Kontakt, Produkte, Rechtstexte/Kennzeichnung, Disclaimer.
+
+## Trend-Radar (`/#/trends`)
+
+- Daten: `lib/trends.ts` mit 47 Signalen in 7 Feldern (Kommunikation, Design, Kultur, Marketing, Musik, Gesundheit, Lifestyle) und 23 Radar-Quellen. Jedes Signal: Insight mit Zahl, „So nutzt du es“, „Finger weg“, Pxx, Plattformen, Ziele, Stichworte, Quellen mit Datum, Ablaufdatum.
+- Abgelaufene Signale fallen automatisch raus (`expires`). Recherche-Stand Oktober 2026, Pflege einmal pro Quartal.
+- Matching (`matchTrends`): Stichworte in den Antworten, Ziel, Plattform, aktive Prinzipien. Max. 2 Treffer pro Feld.
+- Einbindung: Report-Tab „Trends“, Markdown-Export „Trend-Kontext“, Tiny Strategy Paper + Export, eigene Radar-Seite mit Filter. Stör-Frage „Läuft das in sechs Wochen noch?“ bei Trend-Wörtern.

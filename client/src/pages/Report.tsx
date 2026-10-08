@@ -16,11 +16,14 @@ import { MODULE_ORDER, MODULE_META, TRACKS } from '@/lib/types';
 import { QUESTIONS } from '@/lib/questions';
 import { PRINCIPLES_BY_ID } from '@/lib/playbook';
 import { isModuleVisible } from '@/lib/track-profiles';
+import { sessionTrends } from '@/lib/trend-context';
+import { TrendCard } from '@/components/TrendCard';
 
 const TABS = [
   { id: 'persona', label: 'Persona' },
   { id: 'hooks', label: 'Hooks' },
   { id: 'formate', label: 'Formate' },
+  { id: 'trends', label: 'Trends' },
   { id: 'risiken', label: 'Risiken' },
   { id: 'style', label: 'Style-DNA' },
   { id: 'roh', label: 'Roh-Daten' },
@@ -44,6 +47,7 @@ export default function Report() {
   const formats = formatRecommendations(state);
   const r = risks(state);
   const comments = leoComments(state);
+  const trends = sessionTrends(state, 4);
 
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 py-12">
@@ -135,6 +139,27 @@ export default function Report() {
               ))}
             </div>
           )}
+        </div>
+      )}
+
+      {tab === 'trends' && (
+        <div className="space-y-6" data-testid="content-trends">
+          <p className="text-sm text-muted-foreground max-w-2xl leading-relaxed">
+            Trend-Kontext aus dem Radar, gematcht auf deine Antworten. Kontext, keine Strategie: Nutze nur, was zu
+            deinem Shift und deinen Leitplanken passt.
+          </p>
+          {trends.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border border-border">
+              {trends.map((m) => (
+                <TrendCard key={m.signal.id} signal={m.signal} reasons={m.reasons} />
+              ))}
+            </div>
+          ) : (
+            <p className="font-serif text-2xl">Noch zu wenig Material für einen Treffer. Beantworte Starter und Brief, dann sucht Leo.</p>
+          )}
+          <a href="#/trends" className="font-mono text-tag text-primary hover:underline" data-testid="link-report-trends">
+            Ganzen Trend-Radar ansehen →
+          </a>
         </div>
       )}
 

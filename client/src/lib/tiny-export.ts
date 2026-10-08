@@ -1,6 +1,8 @@
 import type { SessionState, CrispKey } from './types';
 import { PRINCIPLES_BY_ID } from './playbook';
 import { downloadFile } from './export';
+import { tinyTrends } from './trend-context';
+import { TREND_DOMAINS, formatSourceDate } from './trends';
 import {
   TINY_GOALS,
   CRISP_META,
@@ -79,6 +81,14 @@ export function tinyToMarkdown(s: SessionState): string {
     L.push(`- Prinzipien: ${f.principles.join(', ')}`);
     L.push('');
   });
+  const trends = tinyTrends(t, 3);
+  if (trends.length > 0) {
+    L.push('## Trend-Kontext');
+    trends.forEach(({ signal: tr }) => {
+      L.push(`- **${tr.title}** (${TREND_DOMAINS[tr.domain]}): ${tr.move} _Quelle: [${tr.sources[0].label}](${tr.sources[0].url}), ${formatSourceDate(tr.sources[0].date)}_`);
+    });
+    L.push('');
+  }
   L.push('## Mini-CRISP');
   (Object.keys(CRISP_META) as CrispKey[]).forEach((k) => {
     if (k === 'p' && !crisp.p.trim()) return;

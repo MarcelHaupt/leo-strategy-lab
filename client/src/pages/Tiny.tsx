@@ -25,6 +25,8 @@ import {
   tinySteps,
 } from '@/lib/tiny-engine';
 import { resolvedCrisp, paperHooks, exportTinyMarkdown, exportTinyJSON } from '@/lib/tiny-export';
+import { tinyTrends } from '@/lib/trend-context';
+import { TREND_DOMAINS, formatSourceDate } from '@/lib/trends';
 
 const fieldCls = 'font-sans border-border bg-card focus-visible:ring-1';
 const chip = (active: boolean) =>
@@ -650,6 +652,28 @@ function StrategyPaper() {
             </p>
           ))}
         </div>
+
+        {(() => {
+          const trends = tinyTrends(t, 3);
+          return trends.length > 0 ? (
+            <div data-testid="paper-tiny-trends">
+              <div className="text-tag text-muted-foreground mb-2">Trend-Kontext</div>
+              <ul className="space-y-2">
+                {trends.map(({ signal: tr }) => (
+                  <li key={tr.id} className="text-sm leading-snug">
+                    <strong>{tr.title}</strong>
+                    <span className="text-muted-foreground"> · {TREND_DOMAINS[tr.domain]} · </span>
+                    {tr.move}{' '}
+                    <a href={tr.sources[0].url} target="_blank" rel="noopener noreferrer" className="text-xs text-muted-foreground underline">
+                      {tr.sources[0].label}, {formatSourceDate(tr.sources[0].date)}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              <a href="#/trends" className="font-mono text-tag text-primary hover:underline mt-2 inline-block">Trend-Radar →</a>
+            </div>
+          ) : null;
+        })()}
 
         <div className="space-y-4">
           <div className="text-tag text-muted-foreground">Mini-CRISP</div>

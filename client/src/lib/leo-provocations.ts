@@ -128,6 +128,13 @@ const PROVOCATIONS: Provocation[] = [
     when: (c) => (c.get('issue') || c.get('pq_what') || c.get('cs_what')) !== '' && !hasAny(c.all, OFFLINE),
   },
   {
+    id: 'halflife',
+    text: 'Läuft das in sechs Wochen noch, oder baut ihr auf Sand?',
+    principleId: 'P13',
+    scopes: ['tiny', 'brief', 'overview'],
+    when: (c) => hasAny(c.all, ['trend', 'viral', 'hype']),
+  },
+  {
     id: 'challenge_behavior',
     text: 'Was könntet ihr tun, das Social-Verhalten herausfordert, statt ihm zu folgen?',
     principleId: 'P21',

@@ -15,6 +15,7 @@ import Module from '@/pages/Module';
 import Report from '@/pages/Report';
 import About from '@/pages/About';
 import Tiny from '@/pages/Tiny';
+import Trends from '@/pages/Trends';
 
 function AppRouter() {
   const [location] = useLocation();
@@ -31,6 +32,7 @@ function AppRouter() {
           <Route path="/report" component={Report} />
           <Route path="/about" component={About} />
           <Route path="/tiny" component={Tiny} />
+          <Route path="/trends" component={Trends} />
           <Route component={NotFound} />
         </Switch>
       </main>
