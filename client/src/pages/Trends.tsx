@@ -21,6 +21,9 @@ export default function Trends() {
   const hasTiny = !!(state.tiny.topic || state.tiny.audience || state.tiny.problemIssue);
   const matches = hasSession ? sessionTrends(state, 3) : hasTiny ? tinyTrends(state.tiny, 3) : [];
 
+  // Breite der Grundlage: wie viele verschiedene Herausgeber und Reports stecken hinter den aktiven Signalen
+  const sourceCount = new Set(signals.flatMap((s) => s.sources.map((src) => src.label.replace(/\s*\(.*\)\s*$/, '').trim()))).size;
+
   const sources = domain === 'alle' ? RADAR_SOURCES : RADAR_SOURCES.filter((r) => r.domains.includes(domain));
 
   return (
@@ -33,8 +36,9 @@ export default function Trends() {
           <span className="italic text-primary">Keine Hypes.</span>
         </h1>
         <p className="text-sm md:text-base text-muted-foreground mt-4 max-w-2xl leading-relaxed">
-          Kuratiert aus Plattform-Reports, Studien und Nischenquellen. Jedes Signal hat eine Quelle, ein Datum und
-          ein Ablaufdatum. Was abgelaufen ist, fliegt automatisch raus. Trends sind Kontext, keine Strategie.
+          Aus {sourceCount} Reports, Studien und Nischenquellen, von Plattformdaten bis Marktforschung, von Handel bis
+          Gesundheit. Jedes Signal hat eine Quelle, ein Datum und ein Ablaufdatum. Was abgelaufen ist, fliegt automatisch
+          raus. Die Punkte zeigen, wie viele Reports dasselbe Muster belegen. Trends sind Kontext, keine Strategie.
         </p>
       </div>
 

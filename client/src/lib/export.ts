@@ -86,6 +86,7 @@ export function toMarkdown(s: SessionState): string {
       lines.push(`- So nutzt du es: ${t.move}`);
       lines.push(`- Finger weg: ${t.skip}`);
       lines.push(`- Prinzipien: ${t.principles.join(', ')}`);
+      if (t.strength) lines.push(`- Signalstärke: ${'●'.repeat(t.strength)}${'○'.repeat(4 - t.strength)} (${t.strength === 4 ? '4 oder mehr' : t.strength} Reports)`);
       lines.push(`- Quelle: ${t.sources.map((src) => `[${src.label}](${src.url}), ${formatSourceDate(src.date)}`).join('; ')}`);
       lines.push('');
     });

@@ -1,5 +1,5 @@
 // LEO Trend-Radar — kuratierte Trend-Signale mit Quelle und Ablaufdatum.
-// Recherche-Stand: November 2026 (Update 26.11.2026 mit The Trend File 2027). Jedes Signal stützt sich auf eine veröffentlichte Quelle.
+// Recherche-Stand: November 2026 (Update 26.11.2026 mit The Trend File 2027, zusammengeführt mit Signalstärke). Jedes Signal stützt sich auf eine veröffentlichte Quelle.
 // Pflege: monatlich per geplanter Aufgabe (1. des Monats) – abgelaufene Signale raus, neue Signale rein, Quellen prüfen.
 // Abgelaufene Signale (expires < heute) werden automatisch ignoriert.
 
@@ -49,9 +49,18 @@ export type TrendSignal = {
   sources: TrendSource[];
   /** YYYY-MM-DD — danach fällt das Signal raus */
   expires: string;
+  /** Signalstärke: Zahl unabhängiger Reports, die dasselbe Muster belegen (1 bis 4, 4 = vier oder mehr) */
+  strength?: 1 | 2 | 3 | 4;
 };
 
 const SHORT = ['TikTok', 'Instagram Reels', 'YouTube Shorts', 'Instagram Stories'];
+
+/** Ordner „The Trend File 2027“ (Google Drive). Reports gehören ihren Herausgebern, hier nur in eigenen Worten zusammengefasst. */
+export const TREND_FILE_FOLDER = 'https://drive.google.com/drive/folders/1B6gVxCJZqSfPwwBqhu0I2qpjYcnocv6K';
+
+function viaTF(label: string, fileId: string, date: string): TrendSource {
+  return { label: `${label} (via The Trend File 2027)`, url: `https://drive.google.com/file/d/${fileId}/view`, date };
+}
 
 export const TREND_SIGNALS: TrendSignal[] = [
   // ───────────── KOMMUNIKATION ─────────────
@@ -1388,54 +1397,6 @@ export const TREND_SIGNALS: TrendSignal[] = [
 
   // Kommunikation
   {
-    id: 'k-bold-hook',
-    domain: 'kommunikation',
-    title: 'Aussage statt Frage im ersten Satz',
-    insight:
-      'Vista Social (1,2 Mio. Markenposts, Aug. bis Okt. 2026): Die Frage ist der häufigste Video-Einstieg (23–29 % der Videos) und schneidet auf allen sieben Netzwerken schlechter ab als die übrigen Videos derselben Marke. Eine klare Aussage oder Behauptung schneidet auf allen sieben besser ab.',
-    move: 'Den ersten Satz als Behauptung schreiben, die das Video dann belegt. „Hast du dich je gefragt …?“ streichen. Die Frage gehört in die Kommentare.',
-    skip: 'Wenn sich die Behauptung nicht belegen lässt. Dann lieber direkt zeigen statt sagen.',
-    principles: ['P15', 'P23', 'P03'],
-    platforms: ['TikTok', 'Instagram Reels', 'YouTube Shorts', 'YouTube', 'LinkedIn'],
-    goals: ['reach'],
-    keywords: ['hook', 'einstieg', 'erster satz', 'video', 'reel', 'aufmerksamkeit', 'frage', 'claim', 'aussage', 'content', 'tiktok'],
-    sources: [{ label: 'Vista Social: What Makes Social Media Content Perform 2027 (via The Trend File 2027)', url: 'https://vistasocial.com/research/social-media-content-performance/', date: '2026-11-09' }],
-    expires: '2027-06-30',
-  },
-  {
-    id: 'k-voice-length',
-    domain: 'kommunikation',
-    title: 'Eine Stimme, eine bis drei Minuten',
-    insight:
-      'Vista Social 2027: Markenvideos mit 1 bis 3 Minuten bekommen auf YouTube 36 % mehr Interaktion als die übrigen Videos derselben Marke, auf Instagram 14 %, auf TikTok 10 %. Unter 15 Sekunden: Instagram −17 %, YouTube −25 %. Spricht jemand, gibt es +18 % auf YouTube und +14 % auf TikTok. Nur Musik ohne Stimme: 10 bis 15 % schlechter. Untertitel bringen 9 bis 12 %.',
-    move: 'Eine Person erklärt in eigener Stimme, mit Untertiteln, lang genug, um etwas zu sagen. Der Call-to-Action kommt ans Ende, nicht an den Anfang.',
-    skip: 'Auf X und Threads laufen kurze Clips leicht besser. LinkedIn reagiert kaum auf Länge oder Stimme, dort zählt das Thema.',
-    principles: ['P14', 'P22', 'P13'],
-    platforms: ['YouTube', 'TikTok', 'Instagram Reels'],
-    goals: ['reach', 'conversion'],
-    keywords: ['video', 'länge', 'voiceover', 'stimme', 'erklär', 'untertitel', 'tutorial', 'youtube', 'reel', 'sprechen', 'kurzvideo'],
-    sources: [{ label: 'Vista Social: What Makes Social Media Content Perform 2027 (via The Trend File 2027)', url: 'https://vistasocial.com/research/social-media-content-performance/', date: '2026-11-09' }],
-    expires: '2027-06-30',
-  },
-  {
-    id: 'k-friends-over-ads',
-    domain: 'kommunikation',
-    title: 'Freunde schlagen Werbung, KI-Bots fast gar nichts',
-    insight:
-      'Euromonitor 2027: 72 % vertrauen beim Kauf Empfehlungen von Freunden und Familie, Werbung 46 %. McKinsey Future of Wellness 2027 (USA): Kaufeinfluss durch Freunde und Familie 35 %, Ärzt:innen 30 %, YouTube 16 %, Influencer 9 %, KI-Chatbots 8 %.',
-    move: 'Das Weitererzählen leicht machen: Mitbring-Training, Empfehlungskarte, Erfahrungsbericht eines Mitglieds. Werbung verstärkt, sie ist nicht der Absender.',
-    skip: 'Wenn es noch keine Kundschaft oder Mitglieder gibt, die erzählen können. Dann erst die ersten zehn gewinnen.',
-    principles: ['P07', 'P23', 'P09'],
-    platforms: [],
-    goals: ['community', 'conversion'],
-    keywords: ['empfehlung', 'weiterempfehl', 'mundpropaganda', 'word of mouth', 'freunde', 'familie', 'vertrauen', 'testimonial', 'bewertung', 'mitglieder', 'bring a friend'],
-    sources: [
-      { label: 'Euromonitor: Top Global Consumer Trends 2027 (via The Trend File 2027)', url: 'https://www.euromonitor.com', date: '2026-11' },
-      { label: 'McKinsey: Future of Wellness 2027 (via The Trend File 2027)', url: 'https://www.mckinsey.com/industries/consumer-packaged-goods/our-insights', date: '2026-11' },
-    ],
-    expires: '2027-12-31',
-  },
-  {
     id: 'k-unstorying',
     domain: 'kommunikation',
     title: 'Un-Storying: sagen, was es ist',
@@ -1449,6 +1410,7 @@ export const TREND_SIGNALS: TrendSignal[] = [
     keywords: ['claim', 'klartext', 'direkt', 'einfach', 'preis', 'storytelling', 'slogan', 'botschaft', 'markenstory', 'positionierung'],
     sources: [{ label: 'NEXTATLAS: There is a crack in everything – Future in Sight 2027 (via The Trend File 2027)', url: 'https://www.nextatlas.com', date: '2026' }],
     expires: '2027-12-31',
+    strength: 1,
   },
 
   // Design
@@ -1466,6 +1428,7 @@ export const TREND_SIGNALS: TrendSignal[] = [
     keywords: ['grafik', 'flyer', 'kachel', 'foto', 'bild', 'sharepic', 'canva', 'plakat', 'instagram', 'facebook', 'text auf'],
     sources: [{ label: 'Vista Social: What Makes Social Media Content Perform 2027 (via The Trend File 2027)', url: 'https://vistasocial.com/research/social-media-content-performance/', date: '2026-11-09' }],
     expires: '2027-06-30',
+    strength: 1,
   },
   {
     id: 'd-third-place',
@@ -1481,39 +1444,10 @@ export const TREND_SIGNALS: TrendSignal[] = [
     keywords: ['raum', 'vereinsheim', 'laden', 'studio', 'café', 'treffpunkt', 'einrichtung', 'atmosphäre', 'third place', 'location', 'lounge'],
     sources: [{ label: 'WGSN: Future Consumer 2028 – The Restorers (via The Trend File 2027)', url: 'https://www.wgsn.com/en', date: '2026' }],
     expires: '2027-12-31',
+    strength: 1,
   },
 
   // Kultur
-  {
-    id: 'c-phone-free',
-    domain: 'kultur',
-    title: 'Handy weg ist das Event',
-    insight:
-      'SENSE Human Rebellion 2027: Handyfreie Events +567 % (Eventbrite-Daten). 29 % der Gen Z haben im letzten Jahr eine Social-App gelöscht (Deloitte), 81 % wünschen sich, leichter abschalten zu können (Harris). Fred again.. ließ das Publikum die Handys weglegen, die Fotos gab es danach per Dropbox.',
-    move: 'Handys einsammeln oder Kamera abkleben, eine Person fotografiert und teilt die Bilder am nächsten Tag. Der Content kommt danach, und alle wollen ihn sehen.',
-    skip: 'Wenn die Reichweite von den Gästen kommen soll, die live posten.',
-    principles: ['P21', 'P07', 'P06'],
-    platforms: [],
-    goals: ['community', 'positioning'],
-    keywords: ['handy', 'smartphone', 'offline', 'digital detox', 'abschalten', 'bildschirm', 'event', 'konzert', 'party', 'phone'],
-    sources: [{ label: 'SENSE: Human Rebellion 2027 (via The Trend File 2027)', url: 'https://thetrendfile.com', date: '2026' }],
-    expires: '2027-12-31',
-  },
-  {
-    id: 'c-under-radar',
-    domain: 'kultur',
-    title: 'Unter dem Radar: klein, empfohlen, einmalig',
-    insight:
-      'SENSE Human Rebellion 2027: 52 % von Gen Z und Millennials bevorzugen Events „unter dem Radar“, 69 % erfahren über Mundpropaganda davon, 58 % wollen etwas Einmaliges. Über 92 % der Events haben weniger als 100 Gäste.',
-    move: 'Klein planen, Plätze knapp halten, über Mitglieder einladen statt über Anzeigen. Das Foto danach macht die Nächsten neugierig.',
-    skip: 'Wenn das Ziel Masse ist (Stadtfest, Tag der offenen Tür für alle).',
-    principles: ['P16', 'P04', 'P12'],
-    platforms: ['Instagram Stories', 'WhatsApp'],
-    goals: ['community', 'positioning'],
-    keywords: ['event', 'veranstaltung', 'exklusiv', 'klein', 'geheim', 'einladung', 'limitiert', 'pop-up', 'gäste', 'warteliste'],
-    sources: [{ label: 'SENSE: Human Rebellion 2027 (via The Trend File 2027)', url: 'https://thetrendfile.com', date: '2026' }],
-    expires: '2027-12-31',
-  },
   {
     id: 'c-documentary',
     domain: 'kultur',
@@ -1528,6 +1462,7 @@ export const TREND_SIGNALS: TrendSignal[] = [
     keywords: ['livestream', 'doku', 'dokumentation', 'behind the scenes', 'alltag', 'prozess', 'making-of', 'ungeschnitten', 'stream', 'werkstatt'],
     sources: [{ label: 'NEXTATLAS: There is a crack in everything – Future in Sight 2027 (via The Trend File 2027)', url: 'https://www.nextatlas.com', date: '2026' }],
     expires: '2027-12-31',
+    strength: 1,
   },
   {
     id: 'c-belonging',
@@ -1543,6 +1478,7 @@ export const TREND_SIGNALS: TrendSignal[] = [
     keywords: ['fans', 'community', 'nische', 'fandom', 'insider', 'mitmachen', 'gen z', 'video podcast', 'podcast', 'sportfans', 'kommentar'],
     sources: [{ label: 'YouTube Culture & Trends: In Search of Mainstream (via The Trend File 2027)', url: 'https://www.youtube.com/trends/', date: '2026' }],
     expires: '2027-12-31',
+    strength: 1,
   },
 
   // Marketing
@@ -1563,6 +1499,7 @@ export const TREND_SIGNALS: TrendSignal[] = [
       { label: 'Foresight Factory: Control Shift – Trending 2027 (via The Trend File 2027)', url: 'https://www.foresightfactory.co', date: '2026' },
     ],
     expires: '2027-12-31',
+    strength: 2,
   },
   {
     id: 'm-co-create',
@@ -1578,6 +1515,7 @@ export const TREND_SIGNALS: TrendSignal[] = [
     keywords: ['mitbestimm', 'co-creation', 'feedback', 'stammkunden', 'community', 'produktentwicklung', 'abstimmung', 'umfrage', 'club', 'neues produkt', 'trikot'],
     sources: [{ label: 'Euromonitor: Top Global Consumer Trends 2027 (via The Trend File 2027)', url: 'https://www.euromonitor.com', date: '2026-11' }],
     expires: '2027-12-31',
+    strength: 1,
   },
   {
     id: 'm-live-sport',
@@ -1596,6 +1534,7 @@ export const TREND_SIGNALS: TrendSignal[] = [
       { label: 'YouTube Culture & Trends: In Search of Mainstream (via The Trend File 2027)', url: 'https://www.youtube.com/trends/', date: '2026' },
     ],
     expires: '2027-12-31',
+    strength: 2,
   },
   {
     id: 'm-dependable',
@@ -1611,24 +1550,10 @@ export const TREND_SIGNALS: TrendSignal[] = [
     keywords: ['preis', 'preiserhöhung', 'abonnement', 'mitgliedsbeitrag', 'zuverlässig', 'garantie', 'treue', 'kündigung', 'beitrag', 'änderung', 'verpackung'],
     sources: [{ label: 'Euromonitor: Top Global Consumer Trends 2027 (via The Trend File 2027)', url: 'https://www.euromonitor.com', date: '2026-11' }],
     expires: '2027-12-31',
+    strength: 1,
   },
 
   // Musik
-  {
-    id: 'mu-fame-not-fandom',
-    domain: 'musik',
-    title: 'Bekannt ist nicht gleich geliebt',
-    insight:
-      'SocialDiscovery.ai Culture Match 2027 (Hörer-Panel, 6.336 Acts, Juli bis Sept. 2026): Popularität und Superfan-Anteil hängen nicht zusammen. Nur 5 der 100 populärsten Acts gehören zu den 100 mit dem höchsten Superfan-Anteil. Bei BTS sind 38 % der Hörer:innen im Panel Superfans, bei Rihanna 2,1 %. Superfan heißt hier: 50+ Plays in drei Monaten.',
-    move: 'Bei Musik-Kooperationen nach dem Superfan-Anteil fragen, nicht nach monatlichen Hörer:innen. Die kleinere Band mit treuer Szene bewegt oft mehr.',
-    skip: 'Wenn reine Bekanntheit in der Breite das Ziel ist.',
-    principles: ['P07', 'P12', 'P04'],
-    platforms: [],
-    goals: ['community', 'positioning'],
-    keywords: ['band', 'künstler', 'artist', 'musiker', 'kooperation', 'partnership', 'superfans', 'konzert', 'sponsoring', 'musik', 'liveact'],
-    sources: [{ label: 'SocialDiscovery.ai: The Culture Match 2027 (via The Trend File 2027)', url: 'https://thetrendfile.com', date: '2026' }],
-    expires: '2027-12-31',
-  },
   {
     id: 'mu-live-making',
     domain: 'musik',
@@ -1643,6 +1568,7 @@ export const TREND_SIGNALS: TrendSignal[] = [
     keywords: ['song', 'release', 'probe', 'soundcheck', 'studio', 'produktion', 'livestream', 'dj-set', 'band', 'mixtape', 'album'],
     sources: [{ label: 'NEXTATLAS: There is a crack in everything – Future in Sight 2027 (via The Trend File 2027)', url: 'https://www.nextatlas.com', date: '2026' }],
     expires: '2027-12-31',
+    strength: 1,
   },
   {
     id: 'mu-ai-labels',
@@ -1661,6 +1587,7 @@ export const TREND_SIGNALS: TrendSignal[] = [
       { label: 'Foresight Factory: Control Shift – Trending 2027 (via The Trend File 2027)', url: 'https://www.foresightfactory.co', date: '2026' },
     ],
     expires: '2027-12-31',
+    strength: 2,
   },
   {
     id: 'mu-fan-credit',
@@ -1676,6 +1603,7 @@ export const TREND_SIGNALS: TrendSignal[] = [
     keywords: ['fans', 'band', 'release', 'single', 'setlist', 'tour', 'konzert', 'fangemeinde', 'meilenstein', 'abstimmung'],
     sources: [{ label: 'YouTube Culture & Trends: In Search of Mainstream (via The Trend File 2027)', url: 'https://www.youtube.com/trends/', date: '2026' }],
     expires: '2027-12-31',
+    strength: 1,
   },
 
   // Gesundheit
@@ -1693,24 +1621,7 @@ export const TREND_SIGNALS: TrendSignal[] = [
     keywords: ['sauna', 'regeneration', 'erholung', 'recovery', 'wellness', 'eisbaden', 'kälte', 'schwimmbad', 'therme', 'team', 'nach dem training'],
     sources: [{ label: 'McKinsey: Future of Wellness 2027 (via The Trend File 2027)', url: 'https://www.mckinsey.com/industries/consumer-packaged-goods/our-insights', date: '2026-11' }],
     expires: '2027-12-31',
-  },
-  {
-    id: 'h-optimization-fatigue',
-    domain: 'gesundheit',
-    title: 'Optimieren erschöpft',
-    insight:
-      'Accenture Life Trends 2027: 83 % folgen einer Gesundheits- oder Optimierungsroutine, mehr als die Hälfte findet das anstrengend. Erwähnungen von „-maxxing“ +270 %. Euromonitor 2027: 58 % erleben täglich moderaten bis extremen Stress, fast sieben von zehn suchen Wege, ihr Leben zu vereinfachen.',
-    move: 'Einen Einstieg ohne Ziel und Messwert anbieten: ein Training, bei dem nichts getrackt wird. „Kein Plan nötig“ ist ein Angebot.',
-    skip: 'Bei einer Wettkampf-Zielgruppe, die genau die Zahlen will.',
-    principles: ['P25', 'P24'],
-    platforms: [],
-    goals: ['conversion', 'positioning'],
-    keywords: ['stress', 'routine', 'tracking', 'optimierung', 'einsteiger', 'anfänger', 'druck', 'entspannt', 'gesundheit', 'ausgleich', 'work-life'],
-    sources: [
-      { label: 'Accenture Song: Life Trends 2027 (via The Trend File 2027)', url: 'https://www.accenture.com', date: '2026' },
-      { label: 'Euromonitor: Top Global Consumer Trends 2027 (via The Trend File 2027)', url: 'https://www.euromonitor.com', date: '2026-11' },
-    ],
-    expires: '2027-12-31',
+    strength: 1,
   },
   {
     id: 'h-boomers-in',
@@ -1726,6 +1637,7 @@ export const TREND_SIGNALS: TrendSignal[] = [
     keywords: ['senioren', 'ältere', 'babyboomer', 'über 50', 'über 60', 'mobilität', 'beweglichkeit', 'reha', 'erwachsene', 'gesundheitssport'],
     sources: [{ label: 'McKinsey: Future of Wellness 2027 (via The Trend File 2027)', url: 'https://www.mckinsey.com/industries/consumer-packaged-goods/our-insights', date: '2026-11' }],
     expires: '2027-12-31',
+    strength: 1,
   },
 
   // Lifestyle
@@ -1743,6 +1655,7 @@ export const TREND_SIGNALS: TrendSignal[] = [
     keywords: ['alkoholfrei', 'nüchtern', 'sober', 'kaffee', 'coffee', 'rave', 'party', 'wandern', 'morgens', 'ausgehen', 'club'],
     sources: [{ label: 'SENSE: Human Rebellion 2027 (via The Trend File 2027)', url: 'https://thetrendfile.com', date: '2026' }],
     expires: '2027-12-31',
+    strength: 1,
   },
   {
     id: 'l-low-octane',
@@ -1761,6 +1674,7 @@ export const TREND_SIGNALS: TrendSignal[] = [
       { label: 'WGSN: Future Consumer 2028 – The Restorers (via The Trend File 2027)', url: 'https://www.wgsn.com/en', date: '2026' },
     ],
     expires: '2027-12-31',
+    strength: 2,
   },
   {
     id: 'l-small-treats',
@@ -1779,24 +1693,524 @@ export const TREND_SIGNALS: TrendSignal[] = [
       { label: 'Euromonitor: Top Global Consumer Trends 2027 (via The Trend File 2027)', url: 'https://www.euromonitor.com', date: '2026-11' },
     ],
     expires: '2027-12-31',
+    strength: 2,
+  },
+
+  // ═════════════ THE TREND FILE 2027, ZWEITE AUSWERTUNG (26.11.2026, mit Signalstärke) ═════════════
+  // Reports aus dem Ordner „The Trend File 2027“ (Google Drive), in eigenen Worten zusammengefasst.
+  // Reports gehören ihren Herausgebern. strength = Zahl unabhängiger Reports, die dasselbe Muster belegen.
+
+  // ───────────── KOMMUNIKATION ─────────────
+  {
+    id: 'k-peer-power',
+    domain: 'kommunikation',
+    title: 'Freunde schlagen Werbung',
+    insight:
+      'Euromonitor 2027: 72 % vertrauen beim Kauf Empfehlungen von Freunden und Familie, Werbung nur 46 %. McKinsey Wellness 2027: Bei Gesundheitsfragen nennen 35 % Freunde und Familie als Quelle, KI-Chatbots 8 %. Hilton 2027: 70 % vertrauen bei der Reiseplanung dem Hotelpersonal. SENSE zitiert Eventbrite: 69 % entdecken Erlebnisse über ihr persönliches Netzwerk.',
+    move: 'Eine Mechanik bauen, mit der Kund:innen andere mitbringen, und die Neuen erzählen lassen, wer sie geholt hat. Im Verein: Probetraining zu zweit. Im Café: die zweite Tasse für die Person, die du mitbringst. Im B2B: ein Kunde stellt den nächsten im Call vor.',
+    skip: 'Wenn es nur ein Rabattcode mit anderem Namen ist. Empfehlung läuft über Beziehung, nicht über Prozente.',
+    principles: ['P07', 'P05', 'P23'],
+    platforms: ['WhatsApp', 'Instagram Stories'],
+    goals: ['conversion', 'community'],
+    keywords: ['empfehlung', 'weiterempfehl', 'mundpropaganda', 'freunde', 'bekannte', 'mitbringen', 'referral', 'word of mouth', 'stammkund', 'vertrauen', 'netzwerk'],
+    sources: [
+      viaTF('Euromonitor Top Global Consumer Trends 2027', '18Aq9a5hg2eS7dQgrPpraArij6R_YPtBe', '2026'),
+      viaTF('McKinsey Future of Wellness 2027', '1WfsXZZji7UlUZ4u7mmhYjwKWpQrAn5Ps', '2026'),
+      viaTF('Hilton 2027 Trends Report', '1sil_hCHyPkcoCAm2rDgwkH0zj0HLV5Nt', '2026'),
+      viaTF('SENSE Human Rebellion 2027', '1aaUOhJ6qZjfLU_gE1J0UTGMWBQP_Ta99', '2026'),
+    ],
+    expires: '2028-01-31',
+    strength: 4,
   },
   {
-    id: 'l-skills',
-    domain: 'lifestyle',
-    title: 'Selbst können: Skills statt Produkte',
+    id: 'k-ai-reputation',
+    domain: 'kommunikation',
+    title: 'KI-Antworten sind die neue Pressemappe',
     insight:
-      'Accenture Life Trends 2027: 63 % halten einen einzigen Job für zu riskant, 56 % der 18- bis 34-Jährigen wollen in den nächsten zwölf Monaten eine praktische oder handwerkliche Fähigkeit lernen, um damit Geld zu verdienen. Foresight Factory 2027: 45 % der 16- bis 24-Jährigen haben eine zweite Einkommensquelle. Primark bietet über 730 Reparatur-Workshops an.',
-    move: 'Können weitergeben statt nur verkaufen: Workshop, Kurs, Trainerschein, Reparier-Abend. Wer etwas gelernt hat, kommt wieder.',
-    skip: 'Wenn niemand im Team etwas beibringen kann oder will.',
-    principles: ['P09', 'P22'],
-    platforms: ['YouTube', 'Instagram'],
-    goals: ['community', 'positioning'],
-    keywords: ['workshop', 'kurs', 'lernen', 'skill', 'handwerk', 'do it yourself', 'reparieren', 'nebenjob', 'ausbildung', 'trainerschein', 'selbermachen'],
+      'Onclusive 2027: KI-Assistenten werden für die Hälfte der Befragten zur wichtigsten Quelle für den Ruf einer Marke, aber nur 17 % beobachten, wie sie dort auftauchen. Euromonitor 2027: In Europa nutzen 16 % GenAI als Infoquelle beim Einkauf, sechs Punkte mehr als im Vorjahr. Nielsen 2026: 75 % prüfen KI-Ergebnisse nach, weil sie ihnen nicht trauen.',
+    move: 'Einmal im Monat ChatGPT, Gemini und Perplexity fragen: „Wer macht X in meiner Stadt?“ oder „Was taugt Produkt Y?“. Notieren, was kommt. Fehlt ihr oder stimmt etwas nicht: Website, Google-Profil und Branchenverzeichnisse mit klaren Fakten nachschärfen. Das gilt für die Zahnarztpraxis genauso wie für das Software-Startup.',
+    skip: 'Wenn euer Geschäft komplett über persönliche Kontakte läuft und niemand online nach euch sucht.',
+    principles: ['P23', 'P10'],
+    platforms: ['LinkedIn', 'YouTube'],
+    goals: ['positioning', 'conversion'],
+    keywords: ['ruf', 'reputation', 'image', 'presse', 'pr', 'chatgpt', 'ki', 'ai', 'suche', 'google', 'sichtbarkeit', 'website'],
     sources: [
-      { label: 'Accenture Song: Life Trends 2027 (via The Trend File 2027)', url: 'https://www.accenture.com', date: '2026' },
-      { label: 'Foresight Factory: Control Shift – Trending 2027 (via The Trend File 2027)', url: 'https://www.foresightfactory.co', date: '2026' },
+      viaTF('Onclusive 2027 Trends Report: PR, Comms & Marketing', '1H9GC4pbJDIRwMjeSDWDAVBQOGauWc7eX', '2026'),
+      viaTF('Euromonitor Top Global Consumer Trends 2027', '18Aq9a5hg2eS7dQgrPpraArij6R_YPtBe', '2026'),
+      viaTF('Nielsen Annual Marketing Report 2026', '10F7w0d_-1uNq3FjaRqePlU9Ihe3yNiG3', '2026'),
     ],
-    expires: '2027-12-31',
+    expires: '2028-01-31',
+    strength: 3,
+  },
+  {
+    id: 'k-video-length',
+    domain: 'kommunikation',
+    title: 'Ein bis drei Minuten, mit Stimme',
+    insight:
+      'Vista Social (1,2 Mio. Markenposts, Aug. bis Okt. 2026, jede Marke mit sich selbst verglichen): Videos von 1 bis 3 Minuten holen auf YouTube 36 % mehr Engagement, auf Instagram 14 %, auf TikTok 10 %. Unter 15 Sekunden verlieren sie 15 bis 25 %. Videos, in denen jemand spricht, liegen bis zu 18 % vorn, reine Musik-Videos 10 bis 15 % hinten. Nielsen 2026: 37 % der Gamer und 31 % der Podcast-Hörer:innen sagen, lange Creator-Inhalte bringen sie zum Kauf.',
+    move: 'Lang genug, um etwas zu sagen. Eine Person erklärt aus dem Off oder in die Kamera, Untertitel an. Bildungsträger, Praxen und Dienstleister profitieren laut Vista am stärksten: Schulen +65 % bei 1 bis 3 Minuten auf YouTube, Gesundheitsanbieter +22 % mit Stimme auf Instagram.',
+    skip: 'Auf X und Threads, dort funktionieren kurze Clips leicht besser. Und wenn niemand etwas zu sagen hat, wird lang nur langatmig.',
+    principles: ['P14', 'P22', 'P10'],
+    platforms: ['YouTube', 'Instagram Reels', 'TikTok'],
+    goals: ['reach', 'positioning'],
+    keywords: ['video', 'länge', 'kurzvideo', 'reels', 'erklär', 'voiceover', 'stimme', 'untertitel', 'tutorial', 'schulung', 'kurs'],
+    sources: [
+      viaTF('Vista Social: What Makes Social Media Content Perform 2027 (CC BY 4.0)', '1v--GwBEgc3IjADaszllDWBx8Bxfnwj8b', '2026-11-09'),
+      viaTF('Nielsen Annual Marketing Report 2026', '10F7w0d_-1uNq3FjaRqePlU9Ihe3yNiG3', '2026'),
+    ],
+    expires: '2028-01-31',
+    strength: 2,
+  },
+  {
+    id: 'k-say-it',
+    domain: 'kommunikation',
+    title: 'Behaupten statt fragen',
+    insight:
+      'Vista Social 2027: „Hast du dich je gefragt …?“ ist der häufigste Video-Einstieg von Marken (23 bis 29 % der Videos) und schneidet auf allen sieben gemessenen Netzwerken schlechter ab. Eine klare Aussage im ersten Satz liegt auf allen sieben vorn. Bilder mit viel Text verlieren auf Instagram 11 %, Werbegrafiken schneiden schlechter ab als echte Fotos. Food-Fotos holen bei Restaurants auf Facebook und Instagram 9 % mehr.',
+    move: 'Den Punkt in den ersten Satz: „Dieses Brot braucht 48 Stunden.“ „Wir haben 2026 drei Kunden verloren. Das war der Grund.“ Foto statt Grafik, Headline statt Flyer.',
+    skip: 'Wenn die Frage wirklich offen ist und ihr die Antworten der Community braucht. Dann in die Kommentare, nicht in den Hook.',
+    principles: ['P03', 'P15', 'P24'],
+    platforms: SHORT,
+    goals: ['reach'],
+    keywords: ['hook', 'einstieg', 'anfang', 'frage', 'aussage', 'caption', 'grafik', 'flyer', 'text', 'headline', 'aufmerksamkeit'],
+    sources: [viaTF('Vista Social: What Makes Social Media Content Perform 2027 (CC BY 4.0)', '1v--GwBEgc3IjADaszllDWBx8Bxfnwj8b', '2026-11-09')],
+    expires: '2028-01-31',
+    strength: 1,
+  },
+
+  // ───────────── DESIGN ─────────────
+  {
+    id: 'd-human-made',
+    domain: 'design',
+    title: '„Made by humans“ wird Gütesiegel',
+    insight:
+      'Accenture Life Trends 2027: Menschengemacht wird zum Statussignal, Posts mit „AI could never“ oder „Made by humans“ sammeln Hunderttausende Likes. SENSE zitiert Gartner: 57 % der Gen Z und Millennials finden, GenAI hat Content schlechter gemacht. IA Retail zitiert DoubleVerify: 92 % sagen, KI-Content macht es schwerer, Infos online zu trauen. Foresight Factory („Conditional Authenticity“) und Trendone („The Human Touch“) beschreiben dasselbe Muster.',
+    move: 'Den Herstellungsweg zeigen, nicht nur das Ergebnis. Wer hat es gemacht, wo, wie lange. In der Tischlerei die Hände am Holz, in der Kanzlei die Person, die den Vertrag wirklich liest, im Fotostudio das Warten auf das Licht. Eine Zeile wie „Fotografiert, nicht generiert“ reicht, wenn sie stimmt.',
+    skip: 'Wenn ihr selbst KI-Bilder nutzt und es nur behauptet. Das fliegt auf und kostet mehr als jede KI-Optik.',
+    principles: ['P25', 'P06', 'P23'],
+    platforms: [],
+    goals: ['positioning', 'conversion'],
+    keywords: ['handgemacht', 'handwerk', 'werkstatt', 'entsteh', 'echt', 'ki', 'ai', 'generiert', 'prozess', 'making-of', 'manufaktur', 'herstell'],
+    sources: [
+      viaTF('Accenture Life Trends 2027', '1jpIbb6nqTiDzNY-_4EDNATQjNNWNT2Qf', '2026'),
+      viaTF('SENSE Human Rebellion 2027', '1aaUOhJ6qZjfLU_gE1J0UTGMWBQP_Ta99', '2026'),
+      viaTF('IA Retail Futures 2027', '1hQIPu6MuMgNi4LqfecRidb0iI0cd3zCJ', '2026'),
+      viaTF('Foresight Factory Control Shift 2027', '1oeAfKC2lKHTnpqyLh2zI5JC1W2bGUe60', '2026'),
+      viaTF('Trendone Trenduniversum 2027', '1lIMneyjo-qDJ31yTjfsTlIow542O-9Ev', '2026'),
+    ],
+    expires: '2028-01-31',
+    strength: 4,
+  },
+  {
+    id: 'd-senses',
+    domain: 'design',
+    title: 'Für alle Sinne bauen, nicht nur fürs Auge',
+    insight:
+      'SENSE 2027 („Sensory Escapism“): 55 % der Gen Z wünschen sich Erlebnisse mit Geruch, Klang und Interaktion (zitierte Studie mit 182.659 Besucherbewertungen). 69 % wollen mehr Events, die ungewöhnliche Welten verbinden (Eventbrite). IA Retail nennt multisensorische Räume als Treiber für den Handel 2027. Lifocolor beschreibt mit „Velvet Tomorrow“ samtige, haptische Oberflächen.',
+    move: 'Ton, Geruch und Material mitplanen, bevor die Kamera läuft. Im Laden: wie klingt die Tür, wie riecht der Eingang. Auf dem Event: was fasst man an. Im Video: das Geräusch in den Vordergrund, nicht unter Musik begraben.',
+    skip: 'Wenn es nur Duftkerze und Playlist ohne Bezug zur Geschichte sind.',
+    principles: ['P14', 'P25', 'P03'],
+    platforms: [],
+    goals: ['community', 'positioning'],
+    keywords: ['sinne', 'erlebnis', 'event', 'laden', 'store', 'raum', 'geruch', 'duft', 'sound', 'haptik', 'material', 'immersiv'],
+    sources: [
+      viaTF('SENSE Human Rebellion 2027', '1aaUOhJ6qZjfLU_gE1J0UTGMWBQP_Ta99', '2026'),
+      viaTF('IA Retail Futures 2027', '1hQIPu6MuMgNi4LqfecRidb0iI0cd3zCJ', '2026'),
+      viaTF('Lifocolor Shades of Living 2027', '1zN110eSV7BqnbjqTTXlawkeDyXgVAae7', '2026'),
+    ],
+    expires: '2028-01-31',
+    strength: 3,
+  },
+  {
+    id: 'd-colour-27',
+    domain: 'design',
+    title: 'Farbe 2027: zwischen Rückzug und Ausdruck',
+    insight:
+      'Lifocolor Shades of Living 2027 (Prognose mit Peclers Paris und Color Marketing Group) nennt vier Farbwelten: „Radiant Rebels“ (kräftige, charakterstarke Töne), „Structured Ease“ (matte, klare Abstufungen), „Cultural Weave“ (erdige Pigmente, Herkunft, Materialmix) und „Velvet Tomorrow“ (gedämpft, samtig, entschleunigt).',
+    move: 'Eine der vier Welten bewusst wählen und durchziehen, statt jede Saison neu zu mischen. Laute Marken (Sportevent, Streetwear, Gastro-Bar) eher „Radiant Rebels“. Beratung, Praxis, Hotel eher „Structured Ease“ oder „Velvet Tomorrow“. Regionale Marken mit Geschichte eher „Cultural Weave“.',
+    skip: 'Wenn eure Markenfarben feststehen und funktionieren. Dann höchstens als Akzent im Shooting oder am Messestand.',
+    principles: ['P15', 'P16'],
+    platforms: ['Instagram', 'Pinterest'],
+    goals: ['positioning'],
+    keywords: ['farbe', 'farben', 'colour', 'color', 'farbwelt', 'interior', 'einrichtung', 'gestaltung', 'branding', 'corporate design', 'messestand'],
+    sources: [viaTF('Lifocolor Shades of Living 2027', '1zN110eSV7BqnbjqTTXlawkeDyXgVAae7', '2026')],
+    expires: '2028-01-31',
+    strength: 1,
+  },
+
+  // ───────────── KULTUR ─────────────
+  {
+    id: 'c-presence',
+    domain: 'kultur',
+    title: 'Präsenz statt Aufnahme',
+    insight:
+      'SENSE zitiert Eventbrite: Handyfreie Events wuchsen weltweit um 567 %. 29 % der Gen Z haben im letzten Jahr eine Social-App gelöscht (Deloitte), 81 % wünschen sich, leichter abschalten zu können (Harris Poll). Accenture 2027: 50 % finden ihre Feeds zunehmend irrelevant. Trendone nennt „Digital Sobriety“. Fred again ließ Fans auf Tour die Handys wegstecken und schickte danach professionelle Fotos und Videos über Dropbox.',
+    move: 'Das Fred-again-Modell: Handys weg, ein Profi dokumentiert, die Bilder kommen am nächsten Tag. Funktioniert bei Konzert, Firmenfeier, Workshop, Lesung und Vereinsfest. Das Publikum ist da, der Content entsteht trotzdem.',
+    skip: 'Wenn das Event von Live-Posts der Gäste lebt (Messe-Stand, Influencer-Launch).',
+    principles: ['P07', 'P21', 'P06'],
+    platforms: [],
+    goals: ['community', 'positioning'],
+    keywords: ['event', 'veranstaltung', 'konzert', 'feier', 'workshop', 'lesung', 'handy', 'smartphone', 'offline', 'präsenz', 'dokumentation'],
+    sources: [
+      viaTF('SENSE Human Rebellion 2027', '1aaUOhJ6qZjfLU_gE1J0UTGMWBQP_Ta99', '2026'),
+      viaTF('Accenture Life Trends 2027', '1jpIbb6nqTiDzNY-_4EDNATQjNNWNT2Qf', '2026'),
+      viaTF('Trendone Trenduniversum 2027', '1lIMneyjo-qDJ31yTjfsTlIow542O-9Ev', '2026'),
+    ],
+    expires: '2028-01-31',
+    strength: 3,
+  },
+  {
+    id: 'c-unmaxxing',
+    domain: 'kultur',
+    title: 'Selbstoptimierung erschöpft',
+    insight:
+      'Accenture 2027: 83 % folgen einer Gesundheits- oder Optimierungsroutine, mehr als die Hälfte davon findet sie anstrengend. Online-Erwähnungen von „-maxxing“ (looksmaxxing, sleepmaxxing) stiegen um 270 %. Euromonitor 2027: 42 % ist wichtig, wie erfolgreich sie auf andere wirken. IA Retail zitiert Forbes: 81 % fühlen sich in mindestens einem Lebensbereich hinter Gleichaltrigen. WGSN Future Consumer 2028 beschreibt mit „The Restorers“ die Gegenbewegung.',
+    move: 'Fortschritt zeigen, der nicht in Zahlen passt: die Stimmung nach dem Kurs, der erste Kunde, der wiederkommt, der Abend ohne Laptop. Keine 30-Tage-Challenge, kein „Werde die beste Version deiner selbst“. Gilt für Fitnessstudio, Coaching, Finanz-App und Weiterbildung gleichermaßen.',
+    skip: 'Bei Wettkampf, Prüfung und Leistung, wo Messbarkeit der Kern ist. Dann die Zahl menschlich erzählen.',
+    principles: ['P25', 'P22', 'P07'],
+    platforms: [],
+    goals: ['positioning', 'community'],
+    keywords: ['optimierung', 'selbstoptimierung', 'produktivität', 'coaching', 'challenge', 'leistung', 'druck', 'stress', 'balance', 'erfolg', 'selfcare'],
+    sources: [
+      viaTF('Accenture Life Trends 2027', '1jpIbb6nqTiDzNY-_4EDNATQjNNWNT2Qf', '2026'),
+      viaTF('Euromonitor Top Global Consumer Trends 2027', '18Aq9a5hg2eS7dQgrPpraArij6R_YPtBe', '2026'),
+      viaTF('IA Retail Futures 2027', '1hQIPu6MuMgNi4LqfecRidb0iI0cd3zCJ', '2026'),
+      viaTF('WGSN Future Consumer 2028', '1J0JXnucuJrnrOzrr7HluMtI8O5ElcU7M', '2026'),
+    ],
+    expires: '2028-01-31',
+    strength: 4,
+  },
+  {
+    id: 'c-human-premium',
+    domain: 'kultur',
+    title: 'Was Menschen nicht an KI abgeben',
+    insight:
+      'Attest 2027 (4.000 Befragte, USA und UK): Wäre es billiger, würden 34 % Finanzberatung an KI abgeben, 30 % die Steuer, 28 % Rechtsberatung. Aber nur 14 % ließen sich im Restaurant von KI bekochen, 12 % die Hochzeit von KI fotografieren, unter 10 % die Haare schneiden, 7 % Angehörige pflegen. IA Retail zitiert Gartner: 50 % bevorzugen Marken, die in der Kundenkommunikation auf GenAI verzichten.',
+    move: 'Klar sagen, wofür Kund:innen bei euch bezahlen: Urteil und Information oder Anwesenheit, Fürsorge und Handwerk. Wer Handwerk und Präsenz verkauft, zeigt die Person. Wer Beratung verkauft, zeigt, was die Maschine nicht kann: Verantwortung übernehmen, nachfragen, widersprechen.',
+    skip: 'Wenn euer Angebot wirklich nur Information ist. Dann lieber selbst mit KI günstiger werden, bevor es jemand anderes tut.',
+    principles: ['P23', 'P22', 'P25'],
+    platforms: [],
+    goals: ['positioning'],
+    keywords: ['dienstleistung', 'beratung', 'kanzlei', 'steuer', 'fotograf', 'friseur', 'pflege', 'restaurant', 'service', 'ki', 'ai', 'persönlich'],
+    sources: [
+      viaTF('Attest 2027 Consumer Trends: The Mediated Consumer', '1E6igKIm9QtXxWU2-3hCi_GKtdI2kdg5X', '2026'),
+      viaTF('IA Retail Futures 2027', '1hQIPu6MuMgNi4LqfecRidb0iI0cd3zCJ', '2026'),
+    ],
+    expires: '2028-01-31',
+    strength: 2,
+  },
+
+  // ───────────── MARKETING ─────────────
+  {
+    id: 'm-ai-shortlist',
+    domain: 'marketing',
+    title: 'KI streicht dich, bevor du es merkst',
+    insight:
+      'Attest 2027 (USA/UK): Bei 37 % der Erstkäufe war ein KI-Assistent beteiligt. 56 % haben ein Produkt nur auf das Wort der KI gestrichen, ohne woanders nachzusehen. KI hilft vor allem Marken, die man schon kennt, aber noch nie gekauft hat: deren Anteil steigt von 24 % auf 36 %. Wer im Laden startet, fragt nur in 15 % der Fälle eine KI. NIQ 2027: 55 % wurden bei Alltagskäufen schon von KI-Empfehlungen beeinflusst. Ipsos 2026: 77 % trauen einem neuen Produkt eher, wenn es von einer bekannten Marke kommt.',
+    move: 'Erst bekannt werden, dann über KI-Sichtbarkeit nachdenken: KI verwertet Bekanntheit, sie baut keine auf. Die Fragen beantworten, an denen Käufe hängen bleiben (Passt das zu meinem Gerät? Was kostet die Anfahrt? Gibt es Parkplätze?), auf der eigenen Seite, in einem Satz.',
+    skip: 'Wenn fast alle Käufe vor Ort entstehen, im Laden, auf dem Markt, in der Halle. Dort spielt KI kaum mit.',
+    principles: ['P23', 'P10', 'P05'],
+    platforms: [],
+    goals: ['conversion'],
+    keywords: ['kauf', 'kaufentscheidung', 'onlineshop', 'e-commerce', 'produkt', 'vergleich', 'chatgpt', 'ki', 'ai', 'bekanntheit', 'faq', 'shop'],
+    sources: [
+      viaTF('Attest 2027 Consumer Trends: The Mediated Consumer', '1E6igKIm9QtXxWU2-3hCi_GKtdI2kdg5X', '2026'),
+      viaTF('NIQ Consumer Outlook Guide to 2027', '1BbDJbPy8EzTh2yQmWLEUSpbjWtZCERPz', '2026'),
+      viaTF('Ipsos Global Trends, 10th Edition', '1qIZdyVrGjCo7N9xchn3StKc1XupAZB_s', '2026-09'),
+    ],
+    expires: '2028-01-31',
+    strength: 3,
+  },
+  {
+    id: 'm-small-near',
+    domain: 'marketing',
+    title: 'Klein und nah schlägt groß und laut',
+    insight:
+      'SENSE 2027 („Micro Moments“, „Insider Energy“): Über 92 % der Events haben weniger als 100 Gäste. 52 % der Gen Z und Millennials bevorzugen Events, die sich „unter dem Radar“ anfühlen, 58 % wollen etwas, das es nur einmal gibt. SENSE zitiert HubSpot 2026: 77 % der Marketer sagen, Authentizität schlägt Produktionswert. Trendone nennt „Community Revival“. Beispiel: NPR Tiny Desk Concerts.',
+    move: 'Statt einem großen Event vier kleine mit je 20 Leuten. Das Autohaus lädt zum Frühstück in die Werkstatt, die Kanzlei zum Kamingespräch, die Band spielt im Wohnzimmer. Jedes Treffen bekommt ein Detail, das man nur vor Ort erfährt.',
+    skip: 'Wenn Reichweite in einer Nacht das Ziel ist (Launch, Spendenaufruf, Eröffnung).',
+    principles: ['P16', 'P07', 'P12'],
+    platforms: [],
+    goals: ['community', 'positioning'],
+    keywords: ['event', 'veranstaltung', 'workshop', 'launch', 'eröffnung', 'kunden', 'exklusiv', 'klein', 'intim', 'dinner', 'kundenevent'],
+    sources: [
+      viaTF('SENSE Human Rebellion 2027', '1aaUOhJ6qZjfLU_gE1J0UTGMWBQP_Ta99', '2026'),
+      viaTF('Trendone Trenduniversum 2027', '1lIMneyjo-qDJ31yTjfsTlIow542O-9Ev', '2026'),
+    ],
+    expires: '2028-01-31',
+    strength: 2,
+  },
+  {
+    id: 'm-local-reason',
+    domain: 'marketing',
+    title: 'Lokal ist ein Kaufgrund',
+    insight:
+      'Accenture 2027: 60 % haben im letzten Jahr Lebensmitteleinkäufe zu lokalen Produkten und Firmen verlagert, in Europa 64 %. 63 % finden, Firmen müssen sich ihr Geschäft durch Jobs vor Ort verdienen. Ipsos 2026: 70 % kaufen lieber Produkte aus dem eigenen Land. Euromonitor 2027: 40 % wollen sich in fünf Jahren stärker in ihrer Community engagieren. Datassential (USA): 67 % würden einen Umweg fahren, um ein lokales Gericht zu probieren.',
+    move: 'Den Ort zeigen statt nur „aus der Region“ zu schreiben: welche Straße, welcher Lieferant, wer hier arbeitet, welcher Verein auf dem Trikot steht. Gilt für die Bäckerei, die Brauerei, den Mittelständler mit 80 Leuten und das Stadtmarketing.',
+    skip: 'Wenn die Marke bewusst überregional verkauft und das Lokale nur Kulisse wäre.',
+    principles: ['P16', 'P07', 'P04'],
+    platforms: [],
+    goals: ['positioning', 'conversion'],
+    keywords: ['lokal', 'regional', 'heimat', 'vor ort', 'filiale', 'mittelstand', 'arbeitgeber', 'fachkräfte', 'azubi', 'einzelhandel', 'bäckerei', 'made in germany'],
+    sources: [
+      viaTF('Accenture Life Trends 2027', '1jpIbb6nqTiDzNY-_4EDNATQjNNWNT2Qf', '2026'),
+      viaTF('Ipsos Global Trends, 10th Edition', '1qIZdyVrGjCo7N9xchn3StKc1XupAZB_s', '2026-09'),
+      viaTF('Euromonitor Top Global Consumer Trends 2027', '18Aq9a5hg2eS7dQgrPpraArij6R_YPtBe', '2026'),
+      viaTF('Datassential 2027 Trends Sneak Peek', '1MmcVUVry-51OW6YFIC4OoaqFLd_GaTcw', '2026'),
+    ],
+    expires: '2028-01-31',
+    strength: 4,
+  },
+  {
+    id: 'm-sport-stage',
+    domain: 'marketing',
+    title: 'Sport ist Bühne, auch für Nicht-Sport-Marken',
+    insight:
+      'Nielsen 2026: 57 % der globalen Markenverantwortlichen sehen Sport als wichtigsten Treiber für Markenbekanntheit, fast zwei von drei nutzen Sponsoring, um bestimmte Fan-Gruppen zu erreichen. Fans begleiten Sport, Athlet:innen und Kommentatoren inzwischen das ganze Jahr.',
+    move: 'Nicht nur die Bande kaufen, sondern Geschichten aus dem Verein erzählen: die Physiotherapeutin aus dem Sponsor-Betrieb am Spielfeldrand, der Bäcker, der die Auswärtsfahrt versorgt, das Unternehmen, das die Jugend-Trikots stellt.',
+    skip: 'Wenn es nur ein Logo auf dem Trikot ist und niemand im Unternehmen einen Bezug zum Verein hat.',
+    principles: ['P07', 'P18', 'P16'],
+    platforms: [],
+    goals: ['reach', 'positioning'],
+    keywords: ['sponsoring', 'sponsor', 'verein', 'sport', 'mannschaft', 'trikot', 'liga', 'turnier', 'fans', 'arena', 'partnerschaft'],
+    sources: [
+      viaTF('Nielsen Annual Marketing Report 2026', '10F7w0d_-1uNq3FjaRqePlU9Ihe3yNiG3', '2026'),
+    ],
+    expires: '2028-01-31',
+    strength: 1,
+  },
+
+  // ───────────── MUSIK ─────────────
+  {
+    id: 'mu-fandom-share',
+    domain: 'musik',
+    title: 'Bekannt ist nicht gleich geliebt',
+    insight:
+      'Social Discovery „The Culture Match 2027“: Bei 6.336 Artists im Panel hängen Popularität und Superfan-Anteil nicht zusammen, die Rangkorrelation liegt bei null. Nur 5 der 100 bekanntesten Artists sind auch unter den 100 mit dem höchsten Superfan-Anteil. 38 % der BTS-Hörer:innen im Panel sind Superfans, bei Rihanna 2,1 %. Achtung: selbst gewähltes Hörer-Panel, kein Weltmarkt. Luminate misst für die USA: 20 % der Musikhörer:innen sind Superfans.',
+    move: 'Bei Kooperationen nicht nach Followern fragen, sondern nach den Treuesten. Bei Creator-Deals: Wie viele kommentieren jede Folge? Beim Sponsoring: Wie viele kommen zu jedem Spiel? Bei Bands: Wie viele kaufen jedes Album?',
+    skip: 'Wenn es wirklich nur um Reichweite geht (Bekanntheitskampagne zum Start).',
+    principles: ['P09', 'P12', 'P18'],
+    platforms: [],
+    goals: ['community', 'conversion'],
+    keywords: ['fans', 'superfan', 'follower', 'reichweite', 'künstler', 'artist', 'band', 'kooperation', 'influencer', 'creator', 'sponsoring'],
+    sources: [
+      viaTF('Social Discovery: The Culture Match 2027', '1Z3M6lKMPl2WUjH7MvSq9vxlT7oJB2V4K', '2026'),
+      { label: 'Luminate 2026 Midyear Report', url: 'https://luminatedata.com/blog/luminate-2026-midyear-report-trends-in-music-television-film/', date: '2026-07-15' },
+    ],
+    expires: '2028-01-31',
+    strength: 2,
+  },
+  {
+    id: 'mu-video-podcast',
+    domain: 'musik',
+    title: 'Podcast mit Bild verkauft besser',
+    insight:
+      'Nielsen 2026: 29 % der Video-Podcast-Zuschauer:innen kaufen nach einer Anzeige auf der Website, bei reinen Audio-Hörer:innen 25 %. 31 % der Podcast-Hörer:innen sagen, lange Creator-Inhalte bringen sie zum Kauf.',
+    move: 'Wer schon einen Podcast macht: eine Kamera dazustellen und die stärksten zwei Minuten als Clip schneiden. Funktioniert für Praxis-Talk, Vereins-Podcast, Agentur-Interview und Musikgespräch.',
+    skip: 'Wenn niemand vor der Kamera entspannt ist. Dann lieber guter Ton ohne Bild als verkrampftes Bild.',
+    principles: ['P14', 'P22', 'P20'],
+    platforms: ['Podcast', 'YouTube', 'Spotify'],
+    goals: ['conversion', 'positioning'],
+    keywords: ['podcast', 'audio', 'interview', 'gespräch', 'talk', 'video', 'youtube', 'spotify', 'folge', 'episode'],
+    sources: [viaTF('Nielsen Annual Marketing Report 2026', '10F7w0d_-1uNq3FjaRqePlU9Ihe3yNiG3', '2026')],
+    expires: '2028-01-31',
+    strength: 1,
+  },
+
+  // ───────────── GESUNDHEIT ─────────────
+  {
+    id: 'h-social-wellness',
+    domain: 'gesundheit',
+    title: 'Sauna statt Bar: Gesundheit wird Treffpunkt',
+    insight:
+      'McKinsey Wellness 2027: 30 % betreiben Social Fitness, bei der Gen Z 42 %. Social Saunas nennt der Report als wachsendes Format, in Deutschland haben 34 % Sauna-Angebote ausprobiert. SENSE zitiert Eventbrite: Sober-Curious-Treffen +92 %, Coffee-Rave-Events +478 %, 61 % der Gen Z wollen weniger trinken. Booking.com 2027: 66 % der Alleinreisenden fanden über ein gemeinsames Sporterlebnis eine dauerhafte Verbindung. ACSM setzt Gruppenkurse auf Platz 7.',
+    move: 'Nach dem Termin nicht auseinandergehen: Sauna, Kaffee, Frühstück als fester Teil. Das Fitnessstudio macht den Kaffee nach dem Kurs zum Programm, das Hotel den Lauftreff am Morgen, die Firma das Teamevent ohne Alkohol, das Café den Run-Club am Samstag.',
+    skip: 'Wenn Räume oder Personal fehlen, um es regelmäßig zu machen. Einmal ist ein Gag, jede Woche ist ein Ritual.',
+    principles: ['P07', 'P09', 'P20'],
+    platforms: ['Instagram Stories', 'Strava'],
+    goals: ['community', 'conversion'],
+    keywords: ['sauna', 'fitness', 'laufen', 'run club', 'gruppenkurs', 'gruppe', 'teamevent', 'alkoholfrei', 'wellness', 'treffen', 'gemeinschaft', 'hotel'],
+    sources: [
+      viaTF('McKinsey Future of Wellness 2027', '1WfsXZZji7UlUZ4u7mmhYjwKWpQrAn5Ps', '2026'),
+      viaTF('SENSE Human Rebellion 2027', '1aaUOhJ6qZjfLU_gE1J0UTGMWBQP_Ta99', '2026'),
+      viaTF('Booking.com Travel Predictions 2027', '1jngXeV-xb1g0FbeEdVG7UHrDzt_efPuS', '2026-10-14'),
+      viaTF('ACSM 2027 Worldwide Fitness Trends', '1FbfbshW2-qVUT49SIQIsItxQXdgl9It0', '2026-10-20'),
+    ],
+    expires: '2028-01-31',
+    strength: 4,
+  },
+  {
+    id: 'h-data-translate',
+    domain: 'gesundheit',
+    title: 'Alle messen, kaum jemand versteht es',
+    insight:
+      'ACSM 2027: Wearables auf Platz 1, Fitness-Apps auf Platz 2. Mintel 2027: 39 % der Deutschen besitzen ein Wearable. Euromonitor 2027: 72 % tracken mindestens einen Gesundheitswert, bei den 15- bis 29-Jährigen 82 %. Gleichzeitig halten nur 12 % GenAI bei Gesundheitsfragen für sehr vertrauenswürdig.',
+    move: 'Daten übersetzen statt zeigen: Was heißt dieser Wert für morgen? Die Physio-Praxis erklärt eine Zahl pro Woche, die Apotheke den Unterschied zwischen Schlafscore und Schlaf, die Krankenkasse, wann ein Wert zum Arzt gehört.',
+    skip: 'Wenn ihr keine Fachleute habt, die Werte seriös einordnen. Dann keine Gesundheitsversprechen.',
+    principles: ['P23', 'P22'],
+    platforms: ['Instagram', 'YouTube'],
+    goals: ['positioning', 'community'],
+    keywords: ['wearable', 'smartwatch', 'tracker', 'app', 'gesundheit', 'daten', 'schlaf', 'puls', 'praxis', 'physio', 'apotheke', 'krankenkasse'],
+    sources: [
+      viaTF('ACSM 2027 Worldwide Fitness Trends', '1FbfbshW2-qVUT49SIQIsItxQXdgl9It0', '2026-10-20'),
+      viaTF('Mintel Global Predictions 2027', '1eqrQwSQvu2hErJBdl8K8W5ssZapov6KZ', '2026-10'),
+      viaTF('Euromonitor Top Global Consumer Trends 2027', '18Aq9a5hg2eS7dQgrPpraArij6R_YPtBe', '2026'),
+    ],
+    expires: '2028-01-31',
+    strength: 3,
+  },
+  {
+    id: 'h-reset',
+    domain: 'gesundheit',
+    title: 'Runterfahren als Angebot',
+    insight:
+      'Hilton 2027 (14.744 Reisende, 14 Länder inkl. Deutschland): 65 % suchen gezielt Erlebnisse, die Körper und Nervensystem beruhigen. 79 % sagen, frische Luft gehört fürs Entspannen dazu. 61 % probieren auf Reisen eher Kälte- oder Wasser-Anwendungen, 60 % lieber gemeinsam. IA Retail: Sephora führt weltweit „Quiet Hours“ mit weniger Musik und Licht ein, 90 % der Kund:innen fanden die Läden dadurch einladender.',
+    move: 'Ruhe als festes Angebot, nicht als Zufall: die stille Stunde im Laden, der Termin ohne Wartezimmer-TV, die Pause im Seminar draußen. Im Content: langsame Bilder, echter Ton, kein Schnittgewitter.',
+    skip: 'Wenn die Marke von Energie und Lautstärke lebt (Esports, Kampfsport-Event, Club). Dann lieber „Für alle Sinne bauen“.',
+    principles: ['P15', 'P25', 'P21'],
+    platforms: [],
+    goals: ['positioning', 'conversion'],
+    keywords: ['ruhe', 'entspannung', 'stress', 'erholung', 'achtsam', 'natur', 'outdoor', 'pause', 'wellness', 'hotel', 'spa', 'praxis'],
+    sources: [
+      viaTF('Hilton 2027 Trends Report', '1sil_hCHyPkcoCAm2rDgwkH0zj0HLV5Nt', '2026'),
+      viaTF('IA Retail Futures 2027', '1hQIPu6MuMgNi4LqfecRidb0iI0cd3zCJ', '2026'),
+      viaTF('Lifocolor Shades of Living 2027', '1zN110eSV7BqnbjqTTXlawkeDyXgVAae7', '2026'),
+    ],
+    expires: '2028-01-31',
+    strength: 3,
+  },
+
+  // ───────────── LIFESTYLE ─────────────
+  {
+    id: 'l-do-together',
+    domain: 'lifestyle',
+    title: 'Gemeinsam etwas tun statt nur treffen',
+    insight:
+      'SENSE 2027 („A Wholesome Life“) zitiert Eventbrite: Teilnahme an Wanderclubs ×6, einer von sechs Menschen weltweit ist von Einsamkeit betroffen. Pinterest-Suchen nach Brieffreundschaft +90 %. Euromonitor 2027: 34 % erwarten, dass mehr Alltag wieder vor Ort stattfindet. Trendone nennt „Beyond Loneliness“ und „Community Revival“. Beispiele: Flock Together (Vogelbeobachtung als Community), Miu Miu Literary Club.',
+    move: 'Einen Anlass geben, der keinen Small Talk braucht: gemeinsam laufen, bauen, lesen, kochen, fotografieren. Die Buchhandlung macht den Leseclub, der Baumarkt den Werkabend, die Agentur das offene Zeichnen am Freitag. Die Tätigkeit trägt das Gespräch.',
+    skip: 'Wenn das Format nur ein Verkaufsabend mit anderem Namen ist.',
+    principles: ['P07', 'P09', 'P04'],
+    platforms: [],
+    goals: ['community'],
+    keywords: ['gemeinschaft', 'community', 'treffen', 'club', 'gruppe', 'einsam', 'hobby', 'workshop', 'lesen', 'kochen', 'wandern', 'nachbarschaft'],
+    sources: [
+      viaTF('SENSE Human Rebellion 2027', '1aaUOhJ6qZjfLU_gE1J0UTGMWBQP_Ta99', '2026'),
+      viaTF('Euromonitor Top Global Consumer Trends 2027', '18Aq9a5hg2eS7dQgrPpraArij6R_YPtBe', '2026'),
+      viaTF('Trendone Trenduniversum 2027', '1lIMneyjo-qDJ31yTjfsTlIow542O-9Ev', '2026'),
+    ],
+    expires: '2028-01-31',
+    strength: 3,
+  },
+  {
+    id: 'l-low-pressure',
+    domain: 'lifestyle',
+    title: 'Dabei sein ohne Verpflichtung',
+    insight:
+      'IA Retail zitiert Harris Poll: 76 % der Gen Z wollen lockere Treffen ohne Druck. IA nennt das „Community without Commitment“: dazugehören ohne Erwartungen. Hilton 2027 („The Rise of ‚Ish‘“): 54 % spüren Druck, die perfekte Reise zu planen. Wer den Druck nicht spürt, lässt lieber Raum für Spontanes (28 %) als einen festen Plan (18 %).',
+    move: 'Die Einstiegshürde senken: Drop-in statt Jahresvertrag, „einfach vorbeikommen“ statt Anmeldeformular, zuschauen erlaubt. Das gilt für Sportverein, Chor, Coworking, Volkshochschule und Kirchengemeinde.',
+    skip: 'Wenn Verbindlichkeit der Kern ist (Mannschaft im Ligabetrieb, Ausbildung, Therapie).',
+    principles: ['P04', 'P07', 'P13'],
+    platforms: [],
+    goals: ['conversion', 'community'],
+    keywords: ['einstieg', 'probetraining', 'schnupper', 'mitgliedschaft', 'abo', 'vertrag', 'anmeld', 'neue mitglieder', 'verein', 'drop-in', 'unverbindlich', 'kommen nicht'],
+    sources: [
+      viaTF('IA Retail Futures 2027', '1hQIPu6MuMgNi4LqfecRidb0iI0cd3zCJ', '2026'),
+      viaTF('Hilton 2027 Trends Report', '1sil_hCHyPkcoCAm2rDgwkH0zj0HLV5Nt', '2026'),
+    ],
+    expires: '2028-01-31',
+    strength: 2,
+  },
+  {
+    id: 'l-discover',
+    domain: 'lifestyle',
+    title: 'Entdecken statt folgen',
+    insight:
+      'SENSE 2027 („Insider Energy“): 69 % finden Erlebnisse über Mundpropaganda, 36 % jagen gern versteckte Orte. Exklusiv heißt nicht mehr VIP-Bereich, sondern Wissen: geheime Location, Passwort, Koordinaten. Beispiel: Nike SNKRS Stash, bei dem Fans Drops an versteckten Orten in der Stadt finden mussten. IA Retail empfiehlt für Läden „Permission to Wander“: Umwege, Ecken, ein Hauch Geheimnis.',
+    move: 'Infos in Etappen streuen: Datum heute, Ort am Vortag, Dresscode im Gruppenchat. Im Laden die Ecke, die man nur findet, wenn man fragt. Auf der Website die Seite, die nur im Newsletter verlinkt ist.',
+    skip: 'Bei Angeboten, die barrierefrei und für alle sein müssen (Schulsport, öffentliche Förderung, Behörden).',
+    principles: ['P16', 'P21', 'P06'],
+    platforms: ['WhatsApp', 'Instagram Stories'],
+    goals: ['community', 'reach'],
+    keywords: ['geheim', 'versteckt', 'exklusiv', 'pop-up', 'popup', 'drop', 'überraschung', 'location', 'insider', 'newsletter', 'entdecken'],
+    sources: [
+      viaTF('SENSE Human Rebellion 2027', '1aaUOhJ6qZjfLU_gE1J0UTGMWBQP_Ta99', '2026'),
+      viaTF('IA Retail Futures 2027', '1hQIPu6MuMgNi4LqfecRidb0iI0cd3zCJ', '2026'),
+    ],
+    expires: '2028-01-31',
+    strength: 2,
+  },
+  {
+    id: 'l-self-made',
+    domain: 'lifestyle',
+    title: 'Selber können: reparieren, lernen, nebenbei verkaufen',
+    insight:
+      'Accenture 2027: 63 % halten es finanziell für zu riskant, sich auf einen einzigen Job zu verlassen. 56 % der 18- bis 34-Jährigen wollen in den nächsten zwölf Monaten eine praktische oder handwerkliche Fähigkeit lernen, um damit Geld zu verdienen, 15 % haben schon mit KI-Tools ein Produkt oder einen Service gebaut, den sie verkaufen. IA Retail zitiert McKinsey: 82 % nutzen Dinge länger, bevor sie ersetzen, 69 % reparieren lieber als neu zu kaufen. Primark bietet über 730 Reparatur-Workshops an, Levi’s repariert im Laden. Hilton 2027: 42 % haben auf Reisen neue Interessen entdeckt, die Gen Z ist fast doppelt so offen wie Boomer, ein neues Hobby zuhause weiterzuführen. Foresight Factory nennt das „Capability Culture“.',
+    move: 'Wissen weitergeben, das andere selbst anwenden können: Workshop, Anleitung, offene Werkstatt, Reparatur-Termin. Der Fahrradladen zeigt den Schlauchwechsel, die Steuerberatung die drei Belege, die jeder sammeln sollte, die Fotografin den Handy-Trick für bessere Porträts.',
+    skip: 'Wenn euer Geschäft davon lebt, dass Kund:innen es nicht selbst können. Dann zeigen, warum es sich lohnt, es abzugeben.',
+    principles: ['P23', 'P09', 'P05'],
+    platforms: ['YouTube', 'Instagram Reels', 'TikTok'],
+    goals: ['community', 'positioning'],
+    keywords: ['diy', 'reparatur', 'reparieren', 'anleitung', 'workshop', 'lernen', 'kurs', 'tipps', 'nebenjob', 'side hustle', 'selbstständig', 'hobby'],
+    sources: [
+      viaTF('Accenture Life Trends 2027', '1jpIbb6nqTiDzNY-_4EDNATQjNNWNT2Qf', '2026'),
+      viaTF('IA Retail Futures 2027', '1hQIPu6MuMgNi4LqfecRidb0iI0cd3zCJ', '2026'),
+      viaTF('Hilton 2027 Trends Report', '1sil_hCHyPkcoCAm2rDgwkH0zj0HLV5Nt', '2026'),
+      viaTF('Foresight Factory Control Shift 2027', '1oeAfKC2lKHTnpqyLh2zI5JC1W2bGUe60', '2026'),
+    ],
+    expires: '2028-01-31',
+    strength: 4,
+  },
+  {
+    id: 'l-participate',
+    domain: 'lifestyle',
+    title: 'Mitmachen mit Folgen',
+    insight:
+      'SENSE 2027 („Co-Creation“): Beteiligung reicht nicht mehr als Hashtag oder Abstimmung, sie muss etwas verändern. Starbucks UK ließ Becher gestalten und hängte die Siegerentwürfe auf nationale Plakate. BSTN und Saucony gaben Kreativen echte Gestaltungsrechte an Einzelstücken. IA Retail empfiehlt gemeinsam gebaute Räume und Installationen. Trendone nennt „Fanthusiasm“.',
+    move: 'Die Community etwas entscheiden lassen, das dann wirklich passiert, und zeigen, dass es umgesetzt wurde. Das Trikotmotiv, die neue Sorte im Eiscafé, der Name des Produkts, die Wand im Büro, das Programm der nächsten Saison.',
+    skip: 'Wenn das Ergebnis schon feststeht. Scheinbeteiligung merkt man sofort.',
+    principles: ['P09', 'P11', 'P20'],
+    platforms: ['Instagram Stories', 'TikTok'],
+    goals: ['community', 'reach'],
+    keywords: ['mitmachen', 'abstimmung', 'voting', 'wettbewerb', 'gewinnspiel', 'beteiligung', 'mitgestalten', 'co-creation', 'community', 'design', 'ugc'],
+    sources: [
+      viaTF('SENSE Human Rebellion 2027', '1aaUOhJ6qZjfLU_gE1J0UTGMWBQP_Ta99', '2026'),
+      viaTF('IA Retail Futures 2027', '1hQIPu6MuMgNi4LqfecRidb0iI0cd3zCJ', '2026'),
+      viaTF('Trendone Trenduniversum 2027', '1lIMneyjo-qDJ31yTjfsTlIow542O-9Ev', '2026'),
+    ],
+    expires: '2028-01-31',
+    strength: 3,
+  },
+  {
+    id: 'l-short-trips',
+    domain: 'lifestyle',
+    title: 'Kurz, oft, voll: die Mikro-Reise',
+    insight:
+      'Hilton 2027: 24 % wollen 2027 mehr Kurztrips machen. 67 % möchten in kurzer Zeit viel erleben, 55 % fühlen einen Urlaubstag ohne Programm als verschenkt. 76 % sagen, eine geplante Reise im Kalender gibt ihnen etwas, worauf sie hinarbeiten. In Deutschland gilt für 26 % ein Kurztrip erst ab fünf Tagen.',
+    move: 'Pakete für zwei, drei Tage schnüren und den ersten Abend gleich mitplanen. Das Hotel bündelt Anreise, Abendessen und Morgenlauf, das Museum die Abendführung mit Restaurant, der Verein das Trainingswochenende mit Programm.',
+    skip: 'Wenn euer Angebot Ruhe und Leere verspricht. Dann lieber „Runterfahren als Angebot“.',
+    principles: ['P08', 'P20'],
+    platforms: ['Instagram', 'TikTok', 'Pinterest'],
+    goals: ['conversion', 'reach'],
+    keywords: ['reise', 'kurztrip', 'wochenende', 'urlaub', 'hotel', 'tourismus', 'ausflug', 'städtereise', 'paket', 'gastgeber', 'museum'],
+    sources: [viaTF('Hilton 2027 Trends Report', '1sil_hCHyPkcoCAm2rDgwkH0zj0HLV5Nt', '2026')],
+    expires: '2028-01-31',
+    strength: 1,
+  },
+  {
+    id: 'l-bold-food',
+    domain: 'lifestyle',
+    title: 'Mutiger Geschmack, alte Klassiker neu',
+    insight:
+      'Datassential 2027 (USA): 64 % zieht es zu kräftigen, ungewöhnlichen Aromen. 56 % der Gen Z mögen Speisen, die polarisieren, manchmal gerade weil andere sie nicht mögen. 64 % sagen, ihr Comfort Food ist nicht das ihrer Eltern. 47 % interessieren sich für Überraschungsboxen im Supermarkt. Alte Klassiker wie Banane, Mango oder Old Fashioned kommen in neuen Varianten zurück.',
+    move: 'Einen Klassiker der Region nehmen und mutig drehen. Die Metzgerei macht die Currywurst mit Chili-Crisp, die Bäckerei das Wochen-Überraschungsbrot, die Kantine das Gericht, über das alle reden.',
+    skip: 'Achtung: US-Daten. Und wenn die Stammkundschaft genau das Gewohnte will, die Neuheit lieber als Zusatz statt als Ersatz.',
+    principles: ['P24', 'P15', 'P19'],
+    platforms: ['Instagram', 'TikTok'],
+    goals: ['reach', 'conversion'],
+    keywords: ['essen', 'food', 'gastro', 'restaurant', 'café', 'bäckerei', 'metzgerei', 'rezept', 'geschmack', 'speisekarte', 'kantine', 'catering'],
+    sources: [viaTF('Datassential 2027 Trends Sneak Peek', '1MmcVUVry-51OW6YFIC4OoaqFLd_GaTcw', '2026')],
+    expires: '2028-01-31',
+    strength: 1,
   },
 ];
 
@@ -1853,6 +2267,8 @@ export const RADAR_SOURCES: RadarSource[] = [
   // Nachtrag 26.11.2026
   { name: 'The Trend File (Sammlung)', url: 'https://thetrendfile.com', domains: ['kommunikation', 'design', 'kultur', 'marketing', 'musik', 'gesundheit', 'lifestyle'], cadence: 'jährlich (November/Dezember)', use: 'Über 100 frei verfügbare Trendreports eines Jahres an einem Ort. Zitiert wird der Herausgeber, The Trend File steht als Fundort dabei.' },
   { name: 'Vista Social Research', url: 'https://vistasocial.com/research/social-media-content-performance/', domains: ['kommunikation', 'design'], cadence: 'jährlich', use: 'Was bei Markenposts wirkt (Länge, Stimme, Hook, Bild), gemessen an über einer Million Posts. CC BY 4.0.' },
+  { name: 'The Trend File 2027 (Google-Drive-Ordner)', url: TREND_FILE_FOLDER, domains: ['kommunikation', 'design', 'kultur', 'marketing', 'musik', 'gesundheit', 'lifestyle'], cadence: 'jährlich (Herbst), laufend ergänzt', use: 'Der Ordner mit allen Reports des Jahrgangs. Die monatliche Aufgabe prüft hier neue Dateien.' },
+  { name: 'Ipsos Global Trends (via The Trend File)', url: 'https://drive.google.com/file/d/1qIZdyVrGjCo7N9xchn3StKc1XupAZB_s/view', domains: ['kultur', 'marketing'], cadence: 'alle ein bis zwei Jahre (September)', use: 'Werte und Einstellungen in über 35 Ländern, Zeitreihen seit 2013, auch für Deutschland.' },
   { name: 'McKinsey Future of Wellness', url: 'https://www.mckinsey.com/industries/consumer-packaged-goods/our-insights', domains: ['gesundheit', 'lifestyle'], cadence: 'jährlich (November)', use: 'Wellness-Verhalten in vier Märkten, mit eigenen Zahlen für Deutschland.' },
 ];
 
@@ -1903,10 +2319,15 @@ export function matchTrends(input: TrendMatchInput, max = 4, now: Date = new Dat
     }
     // Ohne Stichwort-Treffer nur, wenn Ziel UND Plattform passen
     if (!hits.length && !(input.goal && plat.length)) continue;
+    // Gut belegte Signale leicht bevorzugen, aber nur bei inhaltlichem Treffer
+    if (hits.length && s.strength && s.strength > 1) {
+      score += (s.strength - 1) * 0.5;
+      if (s.strength >= 3) reasons.push(`von ${s.strength === 4 ? '4+' : s.strength} Reports belegt`);
+    }
     if (score >= 3) matches.push({ signal: s, score, reasons });
   }
 
-  matches.sort((a, b) => b.score - a.score);
+  matches.sort((a, b) => b.score - a.score || (b.signal.strength ?? 0) - (a.signal.strength ?? 0));
   // höchstens 2 pro Feld, damit es breit bleibt
   const perDomain: Record<string, number> = {};
   const out: TrendMatch[] = [];

@@ -1,6 +1,21 @@
 import type { TrendSignal } from '@/lib/trends';
 import { TREND_DOMAINS, formatSourceDate } from '@/lib/trends';
 
+export function StrengthDots({ strength }: { strength?: number }) {
+  if (!strength) return null;
+  const label = strength >= 4 ? 'von 4 oder mehr Reports belegt' : strength === 1 ? 'von 1 Report belegt' : `von ${strength} Reports belegt`;
+  return (
+    <span className="inline-flex items-center gap-1.5" title={label} aria-label={`Signalstärke: ${label}`} data-testid="trend-strength">
+      <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">Signalstärke</span>
+      <span className="inline-flex gap-0.5" aria-hidden="true">
+        {[1, 2, 3, 4].map((i) => (
+          <span key={i} className={`h-1.5 w-1.5 rounded-full ${i <= strength ? 'bg-primary' : 'bg-border'}`} />
+        ))}
+      </span>
+    </span>
+  );
+}
+
 export function TrendCard({ signal, reasons, compact = false }: { signal: TrendSignal; reasons?: string[]; compact?: boolean }) {
   return (
     <article className="bg-card p-5 space-y-3 h-full flex flex-col" data-testid={`trend-${signal.id}`}>
@@ -11,6 +26,7 @@ export function TrendCard({ signal, reasons, compact = false }: { signal: TrendS
         </span>
       </div>
       <h3 className="font-serif text-2xl leading-tight">{signal.title}</h3>
+      <StrengthDots strength={signal.strength} />
       <p className="text-sm leading-relaxed text-foreground/85">{signal.insight}</p>
       <div className="border-l-2 border-primary pl-3">
         <div className="text-tag text-muted-foreground">So nutzt du es</div>
