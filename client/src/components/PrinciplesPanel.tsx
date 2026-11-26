@@ -28,6 +28,13 @@ export function PrinciplesPanel({ moduleId }: { moduleId: ModuleId }) {
               <p className="text-xs mt-2 italic leading-relaxed border-l-2 border-primary pl-2">
                 {p.leosCheck}
               </p>
+              {p.signal2027 && (
+                <p className="text-xs mt-2 leading-relaxed" data-testid={`principle-signal-${id}`}>
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-primary">2027 Signal · </span>
+                  {p.signal2027.text}{' '}
+                  <span className="text-muted-foreground">({p.signal2027.source})</span>
+                </p>
+              )}
               <p className="font-mono text-[10px] text-muted-foreground mt-2 uppercase tracking-wider">
                 {p.source}
               </p>

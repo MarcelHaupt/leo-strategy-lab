@@ -46,7 +46,7 @@ export default function Welcome() {
           </div>
 
           <p className="font-sans text-lg leading-relaxed max-w-2xl text-foreground/90">
-            Sieben Frameworks. Fünfundzwanzig Prinzipien. Ein Strategie-Report.
+            Sieben Frameworks. Achtundzwanzig Prinzipien. Ein Strategie-Report.
             Beantworte die Fragen so, wie du sie deinem besten Freund beantworten würdest — schnell, ehrlich, ohne Marketing-Sprech.
             Am Ende stehen Hooks, Formate und eine Persona, mit denen wir wirklich arbeiten können.
           </p>

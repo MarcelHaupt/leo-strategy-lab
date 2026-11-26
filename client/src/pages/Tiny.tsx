@@ -344,6 +344,12 @@ export default function Tiny() {
                       <span className="font-serif text-lg leading-tight">{p.name}</span>
                     </div>
                     <p className="text-xs text-muted-foreground mt-2 leading-relaxed">{p.leosCheck}</p>
+                    {p.signal2027 && (
+                      <p className="text-[11px] mt-2 leading-relaxed">
+                        <span className="font-mono text-[10px] uppercase tracking-wider text-primary">2027 · </span>
+                        {p.signal2027.text}
+                      </p>
+                    )}
                     {sug && suggestedIds.includes(id) && (
                       <p className="font-mono text-[10px] uppercase tracking-wider text-primary mt-2">
                         Vorschlag · {sug.reasons.slice(0, 2).join(' · ')}
@@ -359,7 +365,7 @@ export default function Tiny() {
               className="font-mono text-tag text-muted-foreground hover:text-primary"
               data-testid="button-tiny-show-all"
             >
-              {showAll ? '— Nur Vorschläge zeigen' : '+ Alle 25 Prinzipien zeigen'}
+              {showAll ? '— Nur Vorschläge zeigen' : `+ Alle ${PRINCIPLES.length} Prinzipien zeigen`}
             </button>
           </Step>
 

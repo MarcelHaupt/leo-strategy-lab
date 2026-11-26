@@ -135,6 +135,13 @@ const PROVOCATIONS: Provocation[] = [
     when: (c) => hasAny(c.all, ['trend', 'viral', 'hype']),
   },
   {
+    id: 'no_story',
+    text: 'Braucht dieser Post überhaupt eine Story? Oder reicht es, klar zu sagen, was es ist?',
+    principleId: 'P03',
+    scopes: ['tiny', 'brief', 'copyedit', 'overview'],
+    when: (c) => hasAny(c.all, ['story', 'geschichte', 'mythos', 'manifest', 'erzählen']),
+  },
+  {
     id: 'challenge_behavior',
     text: 'Was könntet ihr tun, das Social-Verhalten herausfordert, statt ihm zu folgen?',
     principleId: 'P21',

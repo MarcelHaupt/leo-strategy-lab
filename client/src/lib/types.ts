@@ -195,6 +195,8 @@ export type Principle = {
   leosCheck: string;
   triggers: string[];
   antiTriggers: string[];
+  /** Belegzeile aus dem Playbook-Update 2027 */
+  signal2027?: { text: string; source: string };
 };
 
 export type LeoCommentItem = {

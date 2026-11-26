@@ -28,7 +28,7 @@ export function Logo({ className = '', showWordmark = true }: Props) {
             Strategy Lab
           </span>
           <span className="font-mono text-[9px] tracking-widest text-muted-foreground uppercase">
-            25 Principles
+            28 Principles
           </span>
         </div>
       )}

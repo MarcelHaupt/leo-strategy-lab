@@ -76,7 +76,7 @@ export function problemSentence(t: TinyState): string {
 
 const GOAL_PRINCIPLES: Record<TinyGoal, string[]> = {
   reach: ['P03', 'P15', 'P19', 'P10'],
-  community: ['P02', 'P04', 'P09', 'P11'],
+  community: ['P02', 'P04', 'P09', 'P11', 'P33'],
   positioning: ['P24', 'P16', 'P20', 'P05'],
   conversion: ['P23', 'P07', 'P22', 'P02'],
 };
@@ -87,7 +87,7 @@ const PLATFORM_PRINCIPLES: Record<string, string[]> = {
   'YouTube Shorts': ['P17', 'P03', 'P15'],
   YouTube: ['P08', 'P20', 'P06'],
   LinkedIn: ['P23', 'P24', 'P22'],
-  'Instagram Stories': ['P22', 'P09', 'P13'],
+  'Instagram Stories': ['P22', 'P09', 'P13', 'P34'],
 };
 
 const LOW_BUDGET = ['budget', 'geld', 'handy', 'iphone', 'wenig zeit', 'allein', 'solo', 'klein', 'kein team', 'ohne team'];
@@ -127,6 +127,11 @@ export function suggestPrinciples(t: TinyState): PrincipleSuggestion[] {
       if (hit) add(p.id, 1.5, `Stichwort „${hit}“`);
     }
   }
+
+  // Playbook 2027: klare Themen holen die neuen Prinzipien nach vorn
+  if (/(^|[^a-zäöüß])(ki|ai)([^a-zäöüß]|$)|chatgpt|midjourney|generiert|künstliche intelligenz/.test(text)) add('P35', 2.5, 'Thema KI');
+  if (['handyfrei', 'phone-free', 'konzert', 'vor ort', 'live-event', 'offline'].some((w) => text.includes(w))) add('P34', 2, 'Live-Moment');
+  if (['newsletter', 'podcast', 'whatsapp', 'discord', 'gruppenchat', 'forum'].some((w) => text.includes(w))) add('P33', 1.5, 'Kanal unter dem Feed');
 
   // Post-Post gehört immer auf den Tisch
   add('P02', 1, 'Post-Post-Check');
