@@ -11,6 +11,8 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { scoreAnswer } from '@/lib/leo-engine';
+import { optionLabel } from '@/lib/questions';
+import { tr } from '@/lib/i18n';
 
 type Props = {
   question: Question;
@@ -76,12 +78,12 @@ export function QuestionField({ question, value, onChange }: Props) {
             data-testid={`select-${question.id}`}
             className="border-border bg-card"
           >
-            <SelectValue placeholder="Bitte wählen" />
+            <SelectValue placeholder={tr('Bitte wählen', 'Please choose')} />
           </SelectTrigger>
           <SelectContent>
             {question.options.map((opt) => (
               <SelectItem key={opt} value={opt} data-testid={`option-${question.id}-${opt}`}>
-                {opt}
+                {optionLabel(question, opt)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -106,7 +108,7 @@ export function QuestionField({ question, value, onChange }: Props) {
                 htmlFor={`q-${question.id}-${opt}`}
                 className="font-sans text-sm cursor-pointer"
               >
-                {opt}
+                {optionLabel(question, opt)}
               </Label>
             </div>
           ))}

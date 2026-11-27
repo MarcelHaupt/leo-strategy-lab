@@ -13,21 +13,22 @@ import { ScoreRing } from '@/components/ScoreRing';
 import { LeoComment } from '@/components/LeoComment';
 import { ExportPanel } from '@/components/ExportPanel';
 import { MODULE_ORDER, MODULE_META, TRACKS } from '@/lib/types';
-import { QUESTIONS } from '@/lib/questions';
+import { QUESTIONS, optionLabel, styleLabel } from '@/lib/questions';
+import { tr } from '@/lib/i18n';
 import { PRINCIPLES_BY_ID } from '@/lib/playbook';
 import { isModuleVisible } from '@/lib/track-profiles';
 import { sessionTrends } from '@/lib/trend-context';
 import { TrendCard } from '@/components/TrendCard';
 
 const TABS = [
-  { id: 'persona', label: 'Persona' },
-  { id: 'hooks', label: 'Hooks' },
-  { id: 'formate', label: 'Formate' },
-  { id: 'trends', label: 'Trends' },
-  { id: 'risiken', label: 'Risiken' },
-  { id: 'style', label: 'Style-DNA' },
-  { id: 'roh', label: 'Roh-Daten' },
-  { id: 'export', label: 'Export' },
+  { id: 'persona', de: 'Persona', en: 'Persona' },
+  { id: 'hooks', de: 'Hooks', en: 'Hooks' },
+  { id: 'formate', de: 'Formate', en: 'Formats' },
+  { id: 'trends', de: 'Trends', en: 'Trends' },
+  { id: 'risiken', de: 'Risiken', en: 'Risks' },
+  { id: 'style', de: 'Style-DNA', en: 'Style DNA' },
+  { id: 'roh', de: 'Roh-Daten', en: 'Raw data' },
+  { id: 'export', de: 'Export', en: 'Export' },
 ] as const;
 
 type TabId = (typeof TABS)[number]['id'];
@@ -54,15 +55,15 @@ export default function Report() {
       {/* Hero */}
       <div className="border-b border-border pb-10 mb-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
         <div className="lg:col-span-8">
-          <div className="text-tag text-muted-foreground">STRATEGIE-REPORT</div>
+          <div className="text-tag text-muted-foreground">{tr('STRATEGIE-REPORT', 'STRATEGY REPORT')}</div>
           <h1
             className="font-serif text-5xl md:text-7xl leading-[0.9] mt-2 tracking-tight"
             data-testid="text-report-title"
           >
-            {state.projectName || 'Unbenannt'}
+            {state.projectName || tr('Unbenannt', 'Untitled')}
           </h1>
           <p className="text-tag text-muted-foreground mt-3">
-            KLIENT — {state.clientName || '—'}
+            {tr('KLIENT', 'CLIENT')} — {state.clientName || '—'}
           </p>
           {state.track && (
             <p className="text-tag mt-1">
@@ -92,7 +93,7 @@ export default function Report() {
                   : 'text-muted-foreground'
               }`}
             >
-              {t.label}
+              {tr(t.de, t.en)}
             </button>
           ))}
         </div>
@@ -120,20 +121,20 @@ export default function Report() {
                 <p className="font-serif text-xl leading-snug">{persona.shift.next || '—'}</p>
               </div>
               {persona.shift.action && (
-                <p className="text-sm"><span className="text-tag text-muted-foreground mr-2">HANDLUNG</span>{persona.shift.action}</p>
+                <p className="text-sm"><span className="text-tag text-muted-foreground mr-2">{tr('HANDLUNG', 'ACTION')}</span>{persona.shift.action}</p>
               )}
               {persona.shift.oneThing && (
-                <p className="text-sm"><span className="text-tag text-muted-foreground mr-2">DER EINE SATZ</span>{persona.shift.oneThing}</p>
+                <p className="text-sm"><span className="text-tag text-muted-foreground mr-2">{tr('DER EINE SATZ', 'THE ONE SENTENCE')}</span>{persona.shift.oneThing}</p>
               )}
             </div>
           )}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             <Block label="VOICE" value={persona.voice.join(', ') || '—'} />
-            <Block label="VERMEIDEN" value={persona.avoid.join(', ') || '—'} />
+            <Block label={tr('VERMEIDEN', 'AVOID')} value={persona.avoid.join(', ') || '—'} />
           </div>
           {comments.length > 0 && (
             <div className="border-t border-border pt-8 space-y-3">
-              <div className="text-tag text-muted-foreground">LEO LIEST MIT</div>
+              <div className="text-tag text-muted-foreground">{tr('LEO LIEST MIT', 'LEO IS READING ALONG')}</div>
               {comments.map((c, i) => (
                 <LeoComment key={i} item={c} />
               ))}
@@ -145,8 +146,10 @@ export default function Report() {
       {tab === 'trends' && (
         <div className="space-y-6" data-testid="content-trends">
           <p className="text-sm text-muted-foreground max-w-2xl leading-relaxed">
-            Trend-Kontext aus dem Radar, gematcht auf deine Antworten. Kontext, keine Strategie: Nutze nur, was zu
-            deinem Shift und deinen Leitplanken passt.
+            {tr(
+              'Trend-Kontext aus dem Radar, gematcht auf deine Antworten. Kontext, keine Strategie: Nutze nur, was zu deinem Shift und deinen Leitplanken passt.',
+              'Trend context from the radar, matched to your answers. Context, not strategy: use only what fits your shift and your guardrails.',
+            )}
           </p>
           {trends.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border border-border">
@@ -155,10 +158,10 @@ export default function Report() {
               ))}
             </div>
           ) : (
-            <p className="font-serif text-2xl">Noch zu wenig Material für einen Treffer. Beantworte Starter und Brief, dann sucht Leo.</p>
+            <p className="font-serif text-2xl">{tr('Noch zu wenig Material für einen Treffer. Beantworte Starter und Brief, dann sucht Leo.', 'Not enough material for a match yet. Answer Starter and Brief, then Leo searches.')}</p>
           )}
           <a href="#/trends" className="font-mono text-tag text-primary hover:underline" data-testid="link-report-trends">
-            Ganzen Trend-Radar ansehen →
+            {tr('Ganzen Trend-Radar ansehen →', 'See the full trend radar →')}
           </a>
         </div>
       )}
@@ -202,11 +205,11 @@ export default function Report() {
               <p className="text-sm text-foreground/85 leading-relaxed">{f.description}</p>
               <dl className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-border pt-4 text-sm">
                 <div>
-                  <dt className="text-tag text-muted-foreground">PLATTFORMEN</dt>
+                  <dt className="text-tag text-muted-foreground">{tr('PLATTFORMEN', 'PLATFORMS')}</dt>
                   <dd className="mt-1">{f.platforms.join(', ')}</dd>
                 </div>
                 <div>
-                  <dt className="text-tag text-muted-foreground">FREQUENZ</dt>
+                  <dt className="text-tag text-muted-foreground">{tr('FREQUENZ', 'CADENCE')}</dt>
                   <dd className="mt-1">{f.cadence}</dd>
                 </div>
                 <div>
@@ -222,9 +225,9 @@ export default function Report() {
       {tab === 'risiken' && (
         <div className="space-y-8 max-w-3xl" data-testid="content-risiken">
           <div>
-            <h3 className="font-serif text-2xl mb-4">Verletzte Prinzipien</h3>
+            <h3 className="font-serif text-2xl mb-4">{tr('Verletzte Prinzipien', 'Violated principles')}</h3>
             {r.violatedPrinciples.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Keine harten Verstöße. Bleib wachsam.</p>
+              <p className="text-sm text-muted-foreground">{tr('Keine harten Verstöße. Bleib wachsam.', 'No hard violations. Stay alert.')}</p>
             ) : (
               <ul className="space-y-3">
                 {r.violatedPrinciples.map(({ id, count }) => {
@@ -236,7 +239,7 @@ export default function Report() {
                       data-testid={`violation-${id}`}
                     >
                       <div className="font-mono text-tag text-destructive">
-                        {id} — {count}× verletzt
+                        {id} — {count}× {tr('verletzt', 'violated')}
                       </div>
                       <div className="font-serif text-lg mt-1">{p?.name}</div>
                       <p className="text-sm text-muted-foreground mt-1">{p?.leosCheck}</p>
@@ -248,9 +251,9 @@ export default function Report() {
           </div>
 
           <div>
-            <h3 className="font-serif text-2xl mb-4">Schwache Antworten</h3>
+            <h3 className="font-serif text-2xl mb-4">{tr('Schwache Antworten', 'Weak answers')}</h3>
             {r.weakAnswers.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Keine kritisch dünnen Antworten gefunden.</p>
+              <p className="text-sm text-muted-foreground">{tr('Keine kritisch dünnen Antworten gefunden.', 'No critically thin answers found.')}</p>
             ) : (
               <ul className="space-y-2">
                 {r.weakAnswers.map((w, i) => (
@@ -270,22 +273,22 @@ export default function Report() {
       {tab === 'style' && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-3xl" data-testid="content-style">
           <article className="border border-border bg-card p-6">
-            <div className="text-tag text-primary">ANZIEHEN</div>
+            <div className="text-tag text-primary">{tr('ANZIEHEN', 'ATTRACT')}</div>
             <ul className="font-serif text-2xl leading-tight mt-4 space-y-1">
               {persona.voice.length > 0 ? (
                 persona.voice.map((v) => <li key={v}>{v}</li>)
               ) : (
-                <li className="text-muted-foreground text-base">Noch nichts gewählt.</li>
+                <li className="text-muted-foreground text-base">{tr('Noch nichts gewählt.', 'Nothing chosen yet.')}</li>
               )}
             </ul>
           </article>
           <article className="border border-border bg-card p-6">
-            <div className="text-tag text-muted-foreground">ABSTOSSEN</div>
+            <div className="text-tag text-muted-foreground">{tr('ABSTOSSEN', 'REPEL')}</div>
             <ul className="font-serif text-2xl leading-tight mt-4 space-y-1">
               {persona.avoid.length > 0 ? (
                 persona.avoid.map((v) => <li key={v}>{v}</li>)
               ) : (
-                <li className="text-muted-foreground text-base">Noch nichts gewählt.</li>
+                <li className="text-muted-foreground text-base">{tr('Noch nichts gewählt.', 'Nothing chosen yet.')}</li>
               )}
             </ul>
           </article>
@@ -321,12 +324,12 @@ export default function Report() {
                 {mid === 'style' && (
                   <div className="space-y-2 text-sm">
                     <div>
-                      <span className="text-tag text-muted-foreground">ANZIEHEN: </span>
-                      {((mod.answers.style_attract as string[]) ?? []).join(', ') || '—'}
+                      <span className="text-tag text-muted-foreground">{tr('ANZIEHEN', 'ATTRACT')}: </span>
+                      {((mod.answers.style_attract as string[]) ?? []).map(styleLabel).join(', ') || '—'}
                     </div>
                     <div>
-                      <span className="text-tag text-muted-foreground">ABSTOSSEN: </span>
-                      {((mod.answers.style_avoid as string[]) ?? []).join(', ') || '—'}
+                      <span className="text-tag text-muted-foreground">{tr('ABSTOSSEN', 'REPEL')}: </span>
+                      {((mod.answers.style_avoid as string[]) ?? []).map(styleLabel).join(', ') || '—'}
                     </div>
                   </div>
                 )}
@@ -338,7 +341,7 @@ export default function Report() {
                       <div key={q.id} className="space-y-1">
                         <div className="text-tag text-muted-foreground">{q.label}</div>
                         <p className="text-sm leading-relaxed">
-                          {Array.isArray(v) ? v.join(', ') : v}
+                          {Array.isArray(v) ? v.map((x) => optionLabel(q, x)).join(', ') : optionLabel(q, v)}
                         </p>
                       </div>
                     );

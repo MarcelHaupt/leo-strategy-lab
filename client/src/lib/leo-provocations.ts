@@ -3,6 +3,7 @@
 // Deterministisch: Jede Frage hat eine Bedingung. Es werden höchstens 2 gleichzeitig gezeigt.
 
 import type { SessionState, TinyState, ModuleId, LeoCommentItem } from './types';
+import { tr } from './i18n';
 
 type Ctx = {
   /** alle Texte zusammen, kleingeschrieben */
@@ -22,11 +23,12 @@ type Provocation = {
 const words = (s: string) => (s.trim() ? s.trim().split(/\s+/).length : 0);
 const hasAny = (s: string, list: string[]) => list.some((w) => s.toLowerCase().includes(w));
 
-const BUZZ = ['innovativ', 'einzigartig', 'ganzheitlich', 'synergie', 'mehrwert', 'premium', 'qualität', 'authentisch', 'nachhaltig', 'lösung', 'leidenschaft'];
-const BROAD = ['alle', 'jeder', 'menschen', 'kunden', 'zielgruppe', 'jung', 'breite'];
-const SYMPTOM = ['reichweite', 'algorithmus', 'sichtbarkeit', 'zu wenig', 'nicht genug', 'engagement'];
-const TREND = ['trend', 'viral', 'algorithmus', 'hashtag', 'challenge'];
-const OFFLINE = ['offline', 'vor ort', 'event', 'laden', 'halle', 'training', 'verein', 'live', 'store'];
+const BUZZ = ['innovativ', 'einzigartig', 'ganzheitlich', 'synergie', 'mehrwert', 'premium', 'qualität', 'authentisch', 'nachhaltig', 'lösung', 'leidenschaft',
+  'innovative', 'unique', 'holistic', 'synergy', 'added value', 'quality', 'authentic', 'sustainable', 'solution', 'passion', 'world-class'];
+const BROAD = ['alle', 'jeder', 'menschen', 'kunden', 'zielgruppe', 'jung', 'breite', 'everyone', 'everybody', 'people', 'customers', 'target group', 'young'];
+const SYMPTOM = ['reichweite', 'algorithmus', 'sichtbarkeit', 'zu wenig', 'nicht genug', 'engagement', 'reach', 'algorithm', 'visibility', 'not enough', 'too few'];
+const TREND = ['trend', 'viral', 'algorithmus', 'hashtag', 'challenge', 'algorithm'];
+const OFFLINE = ['offline', 'vor ort', 'event', 'laden', 'halle', 'training', 'verein', 'live', 'store', 'on site', 'in person', 'shop', 'club', 'venue'];
 
 const PROVOCATIONS: Provocation[] = [
   {
@@ -118,7 +120,7 @@ const PROVOCATIONS: Provocation[] = [
     id: 'bare_minimum',
     text: 'Was ist das absolute Minimum, das funktionieren muss?',
     scopes: ['tiny'],
-    when: (c) => hasAny(c.get('constraint'), ['zeit', 'budget', 'woche', 'tage', 'allein', 'handy']),
+    when: (c) => hasAny(c.get('constraint'), ['zeit', 'budget', 'woche', 'tage', 'allein', 'handy', 'time', 'week', 'days', 'alone', 'phone']),
   },
   {
     id: 'offline',
@@ -139,7 +141,7 @@ const PROVOCATIONS: Provocation[] = [
     text: 'Braucht dieser Post überhaupt eine Story? Oder reicht es, klar zu sagen, was es ist?',
     principleId: 'P03',
     scopes: ['tiny', 'brief', 'copyedit', 'overview'],
-    when: (c) => hasAny(c.all, ['story', 'geschichte', 'mythos', 'manifest', 'erzählen']),
+    when: (c) => hasAny(c.all, ['story', 'geschichte', 'mythos', 'manifest', 'erzählen', 'storytelling', 'narrative', 'myth', 'manifesto']),
   },
   {
     id: 'challenge_behavior',
@@ -181,6 +183,32 @@ const PROVOCATIONS: Provocation[] = [
     when: (c) => (c.scope === 'tiny' ? !!c.get('crisp') && !c.get('next72') : !!c.get('brief_purpose') && !c.get('brief_next')),
   },
 ];
+
+const TEXT_EN: Record<string, string> = {
+  symptom: 'Are you solving a symptom or the cause?',
+  who_said: 'Who decided this is the right problem? And how does that person know?',
+  allows: 'What makes the problem possible in the first place?',
+  unique_access: 'Everyone can reach the same customers. What does this brand have that nobody else has?',
+  twelve: 'Would a twelve-year-old understand what you do?',
+  what_mean: 'What exactly do you mean? Say it without adjectives.',
+  not_selling: 'Who are you deliberately not talking to?',
+  so_what: 'So what? Why should anyone care?',
+  would_be_true: 'What would have to be true for this to work? Write the sentence: If ___ is true, we can …',
+  what_changes: 'If everything goes right: what concretely changes, and how will you notice?',
+  shift_missing: 'What do people believe about you today that is wrong? Without that sentence there is no shift.',
+  controversy: 'Where is the friction? No contradiction, no comments.',
+  leave_behind: 'What are you deliberately leaving out?',
+  bare_minimum: 'What is the absolute minimum that has to work?',
+  offline: 'What is the most relevant part of this topic that happens 100 % offline?',
+  halflife: 'Will this still work in six weeks, or are you building on sand?',
+  no_story: 'Does this post even need a story? Or is it enough to say clearly what it is?',
+  challenge_behavior: 'What could you do that challenges social behaviour instead of following it?',
+  outside_industry: 'Have you explained this to someone outside the industry? What did they ask back?',
+  mood_buy: 'What mood are people in when they buy or book?',
+  investigative: 'Imagine you are an investigative journalist researching your audience. Where do you start?',
+  ugly_first: 'Did you write it ugly first, before you made it pretty?',
+  now_what: 'And now? What happens first thing tomorrow morning?',
+};
 
 const ofValue = (v: unknown): string =>
   typeof v === 'string' ? v : Array.isArray(v) ? v.join(', ') : '';
@@ -234,7 +262,7 @@ function pick(c: Ctx, max: number): LeoCommentItem[] {
       }
     })
     .slice(0, max)
-    .map((p) => ({ tone: 'question' as const, text: p.text, principleId: p.principleId }));
+    .map((p) => ({ tone: 'question' as const, text: tr(p.text, TEXT_EN[p.id] ?? p.text), principleId: p.principleId }));
 }
 
 /** Für die lange Session: Übersicht/Report ('overview') oder ein einzelnes Modul */

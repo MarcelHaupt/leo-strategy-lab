@@ -7,6 +7,7 @@ import { sessionScore, leoComments } from '@/lib/leo-engine';
 import { LeoComment } from '@/components/LeoComment';
 import { ScoreRing } from '@/components/ScoreRing';
 import { isModuleVisible, visibleModulesForTrack } from '@/lib/track-profiles';
+import { tr } from '@/lib/i18n';
 
 export default function Modules() {
   const { state } = useSession();
@@ -31,20 +32,22 @@ export default function Modules() {
     <div className="mx-auto max-w-6xl px-4 sm:px-6 py-12 space-y-12">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end border-b border-border pb-10">
         <div className="lg:col-span-8">
-          <div className="text-tag text-muted-foreground">ÜBERSICHT</div>
+          <div className="text-tag text-muted-foreground">{tr('ÜBERSICHT', 'OVERVIEW')}</div>
           <h1 className="font-serif text-5xl md:text-7xl leading-[0.9] mt-2 tracking-tight">
-            {String(visibleModules.length).padStart(2, '0')} Module.
+            {String(visibleModules.length).padStart(2, '0')} {tr('Module.', 'modules.')}
             <br />
-            <span className="italic text-primary">Ein Report.</span>
+            <span className="italic text-primary">{tr('Ein Report.', 'One report.')}</span>
           </h1>
           <p className="text-sm md:text-base text-muted-foreground mt-4 max-w-xl leading-relaxed">
-            Du kannst in beliebiger Reihenfolge arbeiten. Jedes Modul wird live ausgewertet und
-            fließt in den finalen Strategie-Report ein.
+            {tr(
+              'Du kannst in beliebiger Reihenfolge arbeiten. Jedes Modul wird live ausgewertet und fließt in den finalen Strategie-Report ein.',
+              'Work in any order you like. Every module is evaluated live and feeds into the final strategy report.',
+            )}
           </p>
         </div>
         <div className="lg:col-span-4 flex items-end justify-end gap-6">
           <div className="text-right space-y-1">
-            <div className="text-tag text-muted-foreground">FORTSCHRITT</div>
+            <div className="text-tag text-muted-foreground">{tr('FORTSCHRITT', 'PROGRESS')}</div>
             <div className="font-mono text-3xl text-foreground" data-testid="text-progress">
               {String(completed).padStart(2, '0')} / {String(visibleModules.length).padStart(2, '0')}
             </div>
@@ -69,7 +72,7 @@ export default function Modules() {
 
       {comments.length > 0 && (
         <div className="border-t border-border pt-10">
-          <div className="text-tag text-muted-foreground mb-4">LEO LIEST MIT</div>
+          <div className="text-tag text-muted-foreground mb-4">{tr('LEO LIEST MIT', 'LEO IS READING ALONG')}</div>
           <div className="space-y-3 max-w-3xl">
             {comments.map((c, i) => (
               <LeoComment key={i} item={c} />
@@ -80,11 +83,11 @@ export default function Modules() {
 
       <div className="border-t border-border pt-6 flex items-center justify-between">
         <span className="text-tag text-muted-foreground">
-          Wenn du fertig bist, geht es zum Report.
+          {tr('Wenn du fertig bist, geht es zum Report.', 'When you are done, head to the report.')}
         </span>
         <Link href="/report" data-testid="link-to-report">
           <a className="font-mono uppercase text-sm text-primary hover:underline">
-            Zum Report →
+            {tr('Zum Report →', 'To the report →')}
           </a>
         </Link>
       </div>

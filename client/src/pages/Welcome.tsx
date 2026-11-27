@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { MHMark } from '@/components/Logo';
 import { LeoTagline } from '@/components/LeoTagline';
 import { TRACKS, type TrackId } from '@/lib/types';
+import { tr } from '@/lib/i18n';
+import { LangSwitch } from '@/components/LangSwitch';
 
 export default function Welcome() {
   const { state, dispatch } = useSession();
@@ -29,14 +31,17 @@ export default function Welcome() {
     <div className="mx-auto max-w-5xl px-4 sm:px-6 py-16 md:py-24">
       <div className="space-y-12">
         <div className="space-y-6">
-          <div className="font-mono text-tag text-muted-foreground">
-            MARCEL HAUPT · CREATIVE ATHLETE
+          <div className="flex items-center justify-between gap-4">
+            <div className="font-mono text-tag text-muted-foreground">
+              MARCEL HAUPT · CREATIVE ATHLETE
+            </div>
+            <LangSwitch />
           </div>
           <MHMark className="h-24 w-24 text-foreground" />
 
           <div>
             <div className="text-tag text-muted-foreground">
-              01 / Briefing-Werkstatt für Social-First Marken
+              {tr('01 / Briefing-Werkstatt für Social-First Marken', '01 / Briefing workshop for social-first brands')}
             </div>
             <h1 className="font-serif text-6xl md:text-8xl leading-[0.9] mt-3 tracking-tight">
               Strategy
@@ -46,9 +51,10 @@ export default function Welcome() {
           </div>
 
           <p className="font-sans text-lg leading-relaxed max-w-2xl text-foreground/90">
-            Sieben Frameworks. Achtundzwanzig Prinzipien. Ein Strategie-Report.
-            Beantworte die Fragen so, wie du sie deinem besten Freund beantworten würdest — schnell, ehrlich, ohne Marketing-Sprech.
-            Am Ende stehen Hooks, Formate und eine Persona, mit denen wir wirklich arbeiten können.
+            {tr(
+              'Sieben Frameworks. Achtundzwanzig Prinzipien. Ein Strategie-Report. Beantworte die Fragen so, wie du sie deinem besten Freund beantworten würdest — schnell, ehrlich, ohne Marketing-Sprech. Am Ende stehen Hooks, Formate und eine Persona, mit denen wir wirklich arbeiten können.',
+              'Seven frameworks. Twenty-eight principles. One strategy report. Answer the questions the way you would answer your best friend: fast, honest, no marketing speak. At the end you get hooks, formats and a persona we can actually work with.',
+            )}
           </p>
 
           <div className="pt-2">
@@ -64,27 +70,30 @@ export default function Welcome() {
         >
           <div className="md:col-span-3">
             <div className="font-mono text-tag text-primary">TINY MODE</div>
-            <div className="font-mono text-tag text-muted-foreground mt-1">6 Schritte · ≈ 15 Min</div>
+            <div className="font-mono text-tag text-muted-foreground mt-1">{tr('6 Schritte · ≈ 15 Min', '6 steps · ≈ 15 min')}</div>
           </div>
           <div className="md:col-span-7">
             <h2 className="font-serif text-3xl leading-tight tracking-tight">
-              Wenig Zeit, klares <span className="italic text-primary">Briefing?</span>
+              {tr('Wenig Zeit, klares', 'Little time, clear')} <span className="italic text-primary">Briefing?</span>
             </h2>
             <p className="text-sm text-foreground/80 mt-1 leading-relaxed">
-              Ziel, Plattform, Zielgruppe, Grenze. Daraus werden Problem-Satz, Hooks, Format, Mini-CRISP und die nächsten 72 Stunden.
+              {tr(
+                'Ziel, Plattform, Zielgruppe, Grenze. Daraus werden Problem-Satz, Hooks, Format, Mini-CRISP und die nächsten 72 Stunden.',
+                'Goal, platform, audience, constraint. That becomes a problem sentence, hooks, a format, a mini CRISP and the next 72 hours.',
+              )}
             </p>
           </div>
           <div className="md:col-span-2 md:text-right font-mono text-sm uppercase text-primary group-hover:underline">
-            Tiny starten →
+            {tr('Tiny starten →', 'Start Tiny →')}
           </div>
         </a>
 
         {/* Track-Auswahl */}
         <div className="border-t border-border pt-10 space-y-6">
           <div>
-            <div className="text-tag text-muted-foreground">SCHRITT 01</div>
+            <div className="text-tag text-muted-foreground">{tr('SCHRITT 01', 'STEP 01')}</div>
             <h2 className="font-serif text-3xl md:text-4xl mt-1 tracking-tight">
-              Welcher <span className="italic text-primary">Track?</span>
+              {tr('Welcher', 'Which')} <span className="italic text-primary">Track?</span>
             </h2>
           </div>
 
@@ -115,7 +124,7 @@ export default function Welcome() {
                       {track.code}
                     </span>
                     <span className="font-mono text-tag text-muted-foreground">
-                      ≈ {track.questionCount} Fragen
+                      ≈ {track.questionCount} {tr('Fragen', 'questions')}
                     </span>
                   </div>
                   <h3 className="font-serif text-3xl md:text-4xl mt-4 leading-tight tracking-tight">
@@ -133,7 +142,7 @@ export default function Welcome() {
           </div>
 
           <p className="font-mono text-xs text-muted-foreground">
-            Dein Track entscheidet, welche Fragen du siehst. Du kannst ihn später wechseln.
+            {tr('Dein Track entscheidet, welche Fragen du siehst. Du kannst ihn später wechseln.', 'Your track decides which questions you see. You can switch it later.')}
           </p>
         </div>
 
@@ -144,21 +153,21 @@ export default function Welcome() {
           }`}
         >
           <div>
-            <div className="text-tag text-muted-foreground">SCHRITT 02</div>
+            <div className="text-tag text-muted-foreground">{tr('SCHRITT 02', 'STEP 02')}</div>
             <h2 className="font-serif text-3xl md:text-4xl mt-1 tracking-tight">
-              Wer und <span className="italic text-primary">was?</span>
+              {tr('Wer und', 'Who and')} <span className="italic text-primary">{tr('was?', 'what?')}</span>
             </h2>
           </div>
 
           <div className="space-y-2">
             <label htmlFor="client" className="text-tag text-muted-foreground">
-              WER BIST DU? (KLIENT-NAME)
+              {tr('WER BIST DU? (KLIENT-NAME)', 'WHO ARE YOU? (CLIENT NAME)')}
             </label>
             <Input
               id="client"
               value={client}
               onChange={(e) => setClient(e.target.value)}
-              placeholder="z.B. Marke Müller"
+              placeholder={tr('z.B. Marke Müller', 'e.g. Brand Miller')}
               className="font-serif text-2xl h-14 border-0 border-b border-border rounded-none bg-transparent px-0 focus-visible:ring-0 focus-visible:border-primary"
               data-testid="input-client-name"
             />
@@ -166,13 +175,13 @@ export default function Welcome() {
 
           <div className="space-y-2">
             <label htmlFor="project" className="text-tag text-muted-foreground">
-              WAS IST DAS PROJEKT?
+              {tr('WAS IST DAS PROJEKT?', 'WHAT IS THE PROJECT?')}
             </label>
             <Input
               id="project"
               value={project}
               onChange={(e) => setProject(e.target.value)}
-              placeholder="z.B. Launch Spring '26"
+              placeholder={tr("z.B. Launch Spring '26", "e.g. Launch Spring '26")}
               className="font-serif text-2xl h-14 border-0 border-b border-border rounded-none bg-transparent px-0 focus-visible:ring-0 focus-visible:border-primary"
               data-testid="input-project-name"
             />
@@ -185,7 +194,7 @@ export default function Welcome() {
             className="font-mono uppercase tracking-widest text-sm h-12 px-6"
             data-testid="button-start"
           >
-            Loslegen →
+            {tr('Loslegen →', 'Get started →')}
           </Button>
 
           <div className="pt-4">
@@ -194,14 +203,14 @@ export default function Welcome() {
               className="font-mono text-tag text-muted-foreground hover:text-primary"
               data-testid="link-about"
             >
-              Worum es im Lab geht →
+              {tr('Worum es im Lab geht →', 'What the Lab is about →')}
             </a>
           </div>
         </div>
 
         <div className="border-t border-border pt-6">
           <p className="font-mono text-xs text-muted-foreground">
-            Alles bleibt in deinem Browser. Bei Reload weg. Am Ende exportieren.
+            {tr('Alles bleibt in deinem Browser. Bei Reload weg. Am Ende exportieren.', 'Everything stays in your browser. Gone on reload. Export at the end.')}
           </p>
         </div>
       </div>

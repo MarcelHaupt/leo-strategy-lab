@@ -2,6 +2,7 @@ import { Link } from 'wouter';
 import type { ModuleId } from '@/lib/types';
 import { MODULE_META } from '@/lib/types';
 import { useSession, moduleProgress } from '@/lib/session-store';
+import { tr } from '@/lib/i18n';
 
 export function ModuleCard({ id }: { id: ModuleId }) {
   const { state } = useSession();
@@ -10,7 +11,7 @@ export function ModuleCard({ id }: { id: ModuleId }) {
   const prog = moduleProgress(mod);
 
   const statusLabel =
-    prog.status === 'done' ? 'ABGESCHLOSSEN' : prog.status === 'partial' ? 'TEILWEISE' : 'OFFEN';
+    prog.status === 'done' ? tr('ABGESCHLOSSEN', 'DONE') : prog.status === 'partial' ? tr('TEILWEISE', 'IN PROGRESS') : tr('OFFEN', 'OPEN');
 
   return (
     <Link href={`/module/${id}`} data-testid={`card-module-${id}`}>
@@ -45,7 +46,7 @@ export function ModuleCard({ id }: { id: ModuleId }) {
 
           <div className="mt-6 flex items-center justify-between text-tag border-t border-border pt-3">
             <span className="text-muted-foreground">
-              {prog.filled > 0 ? `${prog.filled} Antworten` : 'Noch leer'}
+              {prog.filled > 0 ? tr(`${prog.filled} Antworten`, `${prog.filled} answers`) : tr('Noch leer', 'Empty')}
             </span>
             <span className="text-primary group-hover:translate-x-1 transition-transform">→</span>
           </div>

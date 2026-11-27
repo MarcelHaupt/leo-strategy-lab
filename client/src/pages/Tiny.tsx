@@ -27,6 +27,7 @@ import {
 import { resolvedCrisp, paperHooks, exportTinyMarkdown, exportTinyJSON } from '@/lib/tiny-export';
 import { tinyTrends } from '@/lib/trend-context';
 import { TREND_DOMAINS, formatSourceDate } from '@/lib/trends';
+import { tr, dateLocale } from '@/lib/i18n';
 
 const fieldCls = 'font-sans border-border bg-card focus-visible:ring-1';
 const chip = (active: boolean) =>
@@ -113,8 +114,10 @@ export default function Tiny() {
           </Link>
         </div>
         <p className="text-sm md:text-base text-muted-foreground mt-4 max-w-2xl leading-relaxed">
-          Sechs Schritte vom Briefing zum Plan. Kein Deck, keine sieben Module. Am Ende steht ein Strategy Paper
-          mit Hooks, Format und dem, was in den nächsten 72 Stunden passiert.
+          {tr(
+            'Sechs Schritte vom Briefing zum Plan. Kein Deck, keine sieben Module. Am Ende steht ein Strategy Paper mit Hooks, Format und dem, was in den nächsten 72 Stunden passiert.',
+            'Six steps from briefing to plan. No deck, no seven modules. At the end you have a strategy paper with hooks, a format and what happens in the next 72 hours.',
+          )}
         </p>
       </div>
 
@@ -124,23 +127,23 @@ export default function Tiny() {
           <Step n="01" title="Inputs" sub="Goal, Platform, Audience, Constraint">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <FieldLabel htmlFor="tiny-client">Klient</FieldLabel>
+                <FieldLabel htmlFor="tiny-client">{tr('Klient', 'Client')}</FieldLabel>
                 <Input
                   id="tiny-client"
                   value={state.clientName}
                   onChange={(e) => dispatch({ type: 'setMeta', clientName: e.target.value })}
-                  placeholder="z.B. Marke Müller"
+                  placeholder={tr('z.B. Marke Müller', 'e.g. Brand Miller')}
                   className={fieldCls}
                   data-testid="input-tiny-client"
                 />
               </div>
               <div>
-                <FieldLabel htmlFor="tiny-project">Projekt</FieldLabel>
+                <FieldLabel htmlFor="tiny-project">{tr('Projekt', 'Project')}</FieldLabel>
                 <Input
                   id="tiny-project"
                   value={state.projectName}
                   onChange={(e) => dispatch({ type: 'setMeta', projectName: e.target.value })}
-                  placeholder="z.B. Launch Spring '26"
+                  placeholder={tr("z.B. Launch Spring '26", "e.g. Launch Spring '26")}
                   className={fieldCls}
                   data-testid="input-tiny-project"
                 />
@@ -148,19 +151,19 @@ export default function Tiny() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="tiny-topic">Worüber reden wir? Produkt, Person, Thema</FieldLabel>
+              <FieldLabel htmlFor="tiny-topic">{tr('Worüber reden wir? Produkt, Person, Thema', 'What are we talking about? Product, person, topic')}</FieldLabel>
               <Input
                 id="tiny-topic"
                 value={t.topic}
                 onChange={(e) => set({ topic: e.target.value })}
-                placeholder="z.B. die neue Laufschuh-Linie"
+                placeholder={tr('z.B. die neue Laufschuh-Linie', 'e.g. the new running shoe line')}
                 className={fieldCls}
                 data-testid="input-tiny-topic"
               />
             </div>
 
             <div>
-              <FieldLabel>Goal — was ist das Hauptziel?</FieldLabel>
+              <FieldLabel>{tr('Goal — was ist das Hauptziel?', 'Goal: what is the main objective?')}</FieldLabel>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-border border border-border">
                 {(Object.keys(TINY_GOALS) as TinyGoal[]).map((g) => {
                   const on = t.goal === g;
@@ -184,7 +187,7 @@ export default function Tiny() {
             </div>
 
             <div>
-              <FieldLabel>Platform — wo spielt das?</FieldLabel>
+              <FieldLabel>{tr('Platform — wo spielt das?', 'Platform: where does this play out?')}</FieldLabel>
               <div className="flex flex-wrap gap-2">
                 {TINY_PLATFORMS.map((p) => (
                   <button
@@ -202,24 +205,24 @@ export default function Tiny() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="tiny-audience">Audience — für wen genau?</FieldLabel>
+              <FieldLabel htmlFor="tiny-audience">{tr('Audience — für wen genau?', 'Audience: for whom exactly?')}</FieldLabel>
               <Input
                 id="tiny-audience"
                 value={t.audience}
                 onChange={(e) => set({ audience: e.target.value })}
-                placeholder="z.B. junge Athleten mit Nebenjob"
+                placeholder={tr('z.B. junge Athleten mit Nebenjob', 'e.g. young athletes with a side job')}
                 className={fieldCls}
                 data-testid="input-tiny-audience"
               />
             </div>
 
             <div>
-              <FieldLabel htmlFor="tiny-constraint">Constraint — welche harte Grenze gibt es?</FieldLabel>
+              <FieldLabel htmlFor="tiny-constraint">{tr('Constraint — welche harte Grenze gibt es?', 'Constraint: what is the hard limit?')}</FieldLabel>
               <Input
                 id="tiny-constraint"
                 value={t.constraint}
                 onChange={(e) => set({ constraint: e.target.value })}
-                placeholder="z.B. kein Budget, nur Handy, 2 Wochen bis Launch"
+                placeholder={tr('z.B. kein Budget, nur Handy, 2 Wochen bis Launch', 'e.g. no budget, phone only, 2 weeks to launch')}
                 className={fieldCls}
                 data-testid="input-tiny-constraint"
               />
@@ -227,27 +230,27 @@ export default function Tiny() {
           </Step>
 
           {/* 02 Problem */}
-          <Step n="02" title={<>Problem-<span className="italic text-primary">Frame</span></>} sub="Business-Issue + BECAUSE, dann der Shift">
+          <Step n="02" title={<>Problem-<span className="italic text-primary">Frame</span></>} sub={tr('Business-Issue + BECAUSE, dann der Shift', 'Business issue + BECAUSE, then the shift')}>
             <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-3 md:items-end">
               <div>
-                <FieldLabel htmlFor="tiny-issue">Business-Issue</FieldLabel>
+                <FieldLabel htmlFor="tiny-issue">{tr('Business-Issue', 'Business issue')}</FieldLabel>
                 <Input
                   id="tiny-issue"
                   value={t.problemIssue}
                   onChange={(e) => set({ problemIssue: e.target.value })}
-                  placeholder="Wir verlieren Reels-Reach"
+                  placeholder={tr('Wir verlieren Reels-Reach', 'We are losing Reels reach')}
                   className={fieldCls}
                   data-testid="input-tiny-issue"
                 />
               </div>
-              <span className="font-mono text-sm text-primary uppercase tracking-widest md:pb-2">weil</span>
+              <span className="font-mono text-sm text-primary uppercase tracking-widest md:pb-2">{tr('weil', 'because')}</span>
               <div>
-                <FieldLabel htmlFor="tiny-because">Kernursache</FieldLabel>
+                <FieldLabel htmlFor="tiny-because">{tr('Kernursache', 'Root cause')}</FieldLabel>
                 <Input
                   id="tiny-because"
                   value={t.problemBecause}
                   onChange={(e) => set({ problemBecause: e.target.value })}
-                  placeholder="unser Content wie Kampagne aussieht, nicht wie Social"
+                  placeholder={tr('unser Content wie Kampagne aussieht, nicht wie Social', 'our content looks like a campaign, not like social')}
                   className={fieldCls}
                   data-testid="input-tiny-because"
                 />
@@ -255,7 +258,7 @@ export default function Tiny() {
             </div>
 
             <div>
-              <FieldLabel>Problemtyp</FieldLabel>
+              <FieldLabel>{tr('Problemtyp', 'Problem type')}</FieldLabel>
               <div className="flex flex-wrap gap-2">
                 {(Object.keys(PROBLEM_TYPES) as ProblemType[]).map((pt) => (
                   <button
@@ -286,16 +289,19 @@ export default function Tiny() {
               <div>
                 <div className="text-tag text-foreground">Shift</div>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Optional, aber der stärkste Hebel für die Hooks: Was glauben sie heute, was sollen sie danach glauben und tun?
+                  {tr(
+                    'Optional, aber der stärkste Hebel für die Hooks: Was glauben sie heute, was sollen sie danach glauben und tun?',
+                    'Optional, but the strongest lever for the hooks: what do they believe today, what should they believe and do afterwards?',
+                  )}
                 </p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {(
                   [
-                    ['shiftNow', 'Heute glauben sie …', 'z.B. Judo ist was für Kinder im Verein'],
-                    ['shiftNext', 'Danach glauben sie …', 'z.B. Judo macht Erwachsene stärker als jedes Gym'],
-                    ['shiftAction', 'Sie sollen …', 'z.B. ein Probetraining buchen'],
-                    ['shiftOneThing', 'Der eine Satz, der hängen bleibt', 'z.B. Fallen lernen ist Aufstehen lernen'],
+                    ['shiftNow', tr('Heute glauben sie …', 'Today they believe …'), tr('z.B. Judo ist was für Kinder im Verein', 'e.g. judo is for kids at the club')],
+                    ['shiftNext', tr('Danach glauben sie …', 'Afterwards they believe …'), tr('z.B. Judo macht Erwachsene stärker als jedes Gym', 'e.g. judo makes adults stronger than any gym')],
+                    ['shiftAction', tr('Sie sollen …', 'They should …'), tr('z.B. ein Probetraining buchen', 'e.g. book a trial session')],
+                    ['shiftOneThing', tr('Der eine Satz, der hängen bleibt', 'The one sentence that sticks'), tr('z.B. Fallen lernen ist Aufstehen lernen', 'e.g. learning to fall is learning to get up')],
                   ] as const
                 ).map(([key, label, ph]) => (
                   <div key={key}>
@@ -315,9 +321,12 @@ export default function Tiny() {
           </Step>
 
           {/* 03 Playbook */}
-          <Step n="03" title={<>Playbook-<span className="italic text-primary">Scan</span></>} sub={`2–${MAX_PRINCIPLES} Leitplanken wählen`}>
+          <Step n="03" title={<>Playbook-<span className="italic text-primary">Scan</span></>} sub={tr(`2–${MAX_PRINCIPLES} Leitplanken wählen`, `Pick 2–${MAX_PRINCIPLES} guardrails`)}>
             <p className="text-sm text-muted-foreground max-w-2xl leading-relaxed">
-              Leo schlägt vor, du entscheidest. Solange du nichts wählst, arbeitet die App mit Leos Top 3:{' '}
+              {tr(
+                'Leo schlägt vor, du entscheidest. Solange du nichts wählst, arbeitet die App mit Leos Top 3:',
+                'Leo suggests, you decide. As long as you pick nothing, the app works with Leo\'s top 3:',
+              )}{' '}
               <span className="font-mono text-primary">{active.join(' · ')}</span>
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border border-border">
@@ -352,7 +361,7 @@ export default function Tiny() {
                     )}
                     {sug && suggestedIds.includes(id) && (
                       <p className="font-mono text-[10px] uppercase tracking-wider text-primary mt-2">
-                        Vorschlag · {sug.reasons.slice(0, 2).join(' · ')}
+                        {tr('Vorschlag', 'Suggested')} · {sug.reasons.slice(0, 2).join(' · ')}
                       </p>
                     )}
                   </button>
@@ -365,12 +374,12 @@ export default function Tiny() {
               className="font-mono text-tag text-muted-foreground hover:text-primary"
               data-testid="button-tiny-show-all"
             >
-              {showAll ? '— Nur Vorschläge zeigen' : `+ Alle ${PRINCIPLES.length} Prinzipien zeigen`}
+              {showAll ? tr('— Nur Vorschläge zeigen', '— Show suggestions only') : tr(`+ Alle ${PRINCIPLES.length} Prinzipien zeigen`, `+ Show all ${PRINCIPLES.length} principles`)}
             </button>
           </Step>
 
           {/* 04 Hooks & Formate */}
-          <Step n="04" title={<>Hooks &amp; <span className="italic text-primary">Formate</span></>} sub="Group-Chat-Test: würdest du das um 2 Uhr nachts weiterleiten?">
+          <Step n="04" title={<>Hooks &amp; <span className="italic text-primary">{tr('Formate', 'Formats')}</span></>} sub={tr('Group-Chat-Test: würdest du das um 2 Uhr nachts weiterleiten?', 'Group chat test: would you forward this at 2 a.m.?')}>
             <div className="space-y-px bg-border border border-border">
               {hooks.map((h, i) => {
                 const on = t.passedHooks.includes(h.principleId);
@@ -389,9 +398,9 @@ export default function Tiny() {
                       className={`${chip(on)} shrink-0`}
                       data-testid={`button-tiny-hook-pass-${h.principleId}`}
                       aria-pressed={on}
-                      title="Besteht den Group-Chat-Test"
+                      title={tr('Besteht den Group-Chat-Test', 'Passes the group chat test')}
                     >
-                      {on ? 'Besteht' : 'Test?'}
+                      {on ? tr('Besteht', 'Passes') : 'Test?'}
                     </button>
                   </div>
                 );
@@ -399,14 +408,14 @@ export default function Tiny() {
             </div>
 
             <div>
-              <FieldLabel>Format-Mechanik</FieldLabel>
+              <FieldLabel>{tr('Format-Mechanik', 'Format mechanics')}</FieldLabel>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border border-border">
                 {formats.map((f) => (
                   <div key={f.key} className="bg-card p-5 space-y-3" data-testid={`card-tiny-format-${f.key}`}>
                     <h3 className="font-serif text-2xl leading-tight">{f.name}</h3>
                     <p className="text-sm leading-relaxed">{f.mechanic}</p>
                     <dl className="text-xs space-y-1">
-                      <div><dt className="inline text-muted-foreground">Rhythmus: </dt><dd className="inline">{f.cadence}</dd></div>
+                      <div><dt className="inline text-muted-foreground">{tr('Rhythmus', 'Rhythm')}: </dt><dd className="inline">{f.cadence}</dd></div>
                       <div><dt className="inline text-muted-foreground">Reason to return: </dt><dd className="inline">{f.reasonToReturn}</dd></div>
                     </dl>
                     <p className="font-mono text-[11px] text-primary">{f.principles.join(' · ')}</p>
@@ -417,7 +426,7 @@ export default function Tiny() {
           </Step>
 
           {/* 05 Mini-CRISP */}
-          <Step n="05" title={<>Mini-<span className="italic text-primary">CRISP</span></>} sub="Leo entwirft, du schärfst">
+          <Step n="05" title={<>Mini-<span className="italic text-primary">CRISP</span></>} sub={tr('Leo entwirft, du schärfst', 'Leo drafts, you sharpen')}>
             <div className="space-y-6">
               {(Object.keys(CRISP_META) as CrispKey[]).map((k) => {
                 const m = CRISP_META[k];
@@ -437,7 +446,7 @@ export default function Tiny() {
                           className="font-mono text-tag text-muted-foreground hover:text-primary"
                           data-testid={`button-tiny-crisp-draft-${k}`}
                         >
-                          Leo-Entwurf einsetzen
+                          {tr('Leo-Entwurf einsetzen', 'Use Leo\'s draft')}
                         </button>
                       )}
                     </div>
@@ -457,7 +466,7 @@ export default function Tiny() {
           </Step>
 
           {/* 06 Action */}
-          <Step n="06" title={<>Next <span className="italic text-primary">72 Hours</span></>} sub="Was wird produziert, gebaut, getestet?">
+          <Step n="06" title={<>Next <span className="italic text-primary">72 Hours</span></>} sub={tr('Was wird produziert, gebaut, getestet?', 'What gets produced, built, tested?')}>
             <div className="space-y-2">
               <div className="flex justify-end">
                 {t.next72 !== n72 && (
@@ -467,7 +476,7 @@ export default function Tiny() {
                     className="font-mono text-tag text-muted-foreground hover:text-primary"
                     data-testid="button-tiny-next72-draft"
                   >
-                    Leo-Entwurf einsetzen
+                    {tr('Leo-Entwurf einsetzen', 'Use Leo\'s draft')}
                   </button>
                 )}
               </div>
@@ -491,7 +500,7 @@ export default function Tiny() {
         <aside className="lg:col-span-4">
           <div className="lg:sticky lg:top-24 space-y-8">
             <div>
-              <div className="text-tag text-muted-foreground border-b border-border pb-2">Schritte</div>
+              <div className="text-tag text-muted-foreground border-b border-border pb-2">{tr('Schritte', 'Steps')}</div>
               <ol className="mt-3 space-y-1">
                 {steps.map((s, i) => (
                   <li key={s.label}>
@@ -516,7 +525,7 @@ export default function Tiny() {
 
             {checks.length > 0 && (
               <div>
-                <div className="text-tag text-muted-foreground border-b border-border pb-2 mb-3">Leo liest mit</div>
+                <div className="text-tag text-muted-foreground border-b border-border pb-2 mb-3">{tr('Leo liest mit', 'Leo is reading along')}</div>
                 <div className="space-y-3">
                   {checks.map((c, i) => (
                     <LeoComment key={i} item={c} />
@@ -526,24 +535,27 @@ export default function Tiny() {
             )}
 
             <div className="border border-border p-4 space-y-3">
-              <div className="text-tag text-muted-foreground">Mehr Tiefe?</div>
+              <div className="text-tag text-muted-foreground">{tr('Mehr Tiefe?', 'More depth?')}</div>
               <p className="text-xs leading-relaxed text-foreground/80">
-                Tiny ist für schnelle Format- und Hook-Arbeit. Für Persona, Style-DNA und Case Studies gibt es die sieben Module.
+                {tr(
+                  'Tiny ist für schnelle Format- und Hook-Arbeit. Für Persona, Style-DNA und Case Studies gibt es die sieben Module.',
+                  'Tiny is for fast format and hook work. For persona, style DNA and case studies, there are the seven modules.',
+                )}
               </p>
               <Link href="/" data-testid="link-tiny-to-lab">
-                <a className="font-mono text-tag text-primary hover:underline">Zum Strategy Lab →</a>
+                <a className="font-mono text-tag text-primary hover:underline">{tr('Zum Strategy Lab →', 'To the Strategy Lab →')}</a>
               </Link>
             </div>
 
             <button
               type="button"
               onClick={() => {
-                if (window.confirm('Tiny-Session leeren? Klient und Projekt bleiben.')) dispatch({ type: 'resetTiny' });
+                if (window.confirm(tr('Tiny-Session leeren? Klient und Projekt bleiben.', 'Clear the Tiny session? Client and project stay.'))) dispatch({ type: 'resetTiny' });
               }}
               className="font-mono text-tag text-muted-foreground hover:text-destructive"
               data-testid="button-tiny-reset"
             >
-              Tiny-Session leeren
+              {tr('Tiny-Session leeren', 'Clear Tiny session')}
             </button>
           </div>
         </aside>
@@ -584,17 +596,17 @@ function StrategyPaper() {
       <article className="border border-border bg-card p-6 md:p-10 space-y-8" data-testid="article-tiny-paper">
         <header className="space-y-2">
           <div className="font-mono text-tag text-muted-foreground">
-            {state.clientName || 'Klient'} · Tiny Framework · {new Date().toLocaleDateString('de-DE')}
+            {state.clientName || tr('Klient', 'Client')} · Tiny Framework · {new Date().toLocaleDateString(dateLocale())}
           </div>
           <h3 className="font-serif text-4xl md:text-5xl leading-[0.95] tracking-tight">
-            {state.projectName || t.topic || 'Unbenanntes Projekt'}
+            {state.projectName || t.topic || tr('Unbenanntes Projekt', 'Untitled project')}
           </h3>
           <dl className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-border mt-4">
             {[
-              ['Ziel', t.goal ? TINY_GOALS[t.goal].label : '—'],
-              ['Plattform', t.platforms.join(', ') || '—'],
-              ['Für wen', t.audience || '—'],
-              ['Grenze', t.constraint || '—'],
+              [tr('Ziel', 'Goal'), t.goal ? TINY_GOALS[t.goal].label : '—'],
+              [tr('Plattform', 'Platform'), t.platforms.join(', ') || '—'],
+              [tr('Für wen', 'For whom'), t.audience || '—'],
+              [tr('Grenze', 'Constraint'), t.constraint || '—'],
             ].map(([k, v]) => (
               <div key={k}>
                 <dt className="text-tag text-muted-foreground">{k}</dt>
@@ -619,13 +631,13 @@ function StrategyPaper() {
               <span className="font-mono text-primary mx-3">→</span>
               {t.shiftNext.trim() || '—'}
             </p>
-            {t.shiftAction.trim() && <p className="text-sm mt-2">Handlung: {t.shiftAction.trim()}</p>}
-            {t.shiftOneThing.trim() && <p className="text-sm mt-1">Der eine Satz: {t.shiftOneThing.trim()}</p>}
+            {t.shiftAction.trim() && <p className="text-sm mt-2">{tr('Handlung', 'Action')}: {t.shiftAction.trim()}</p>}
+            {t.shiftOneThing.trim() && <p className="text-sm mt-1">{tr('Der eine Satz', 'The one sentence')}: {t.shiftOneThing.trim()}</p>}
           </div>
         )}
 
         <div>
-          <div className="text-tag text-muted-foreground mb-2">Leitplanken</div>
+          <div className="text-tag text-muted-foreground mb-2">{tr('Leitplanken', 'Guardrails')}</div>
           <ul className="space-y-1">
             {principles.map((id) => (
               <li key={id} className="text-sm">
@@ -637,7 +649,7 @@ function StrategyPaper() {
 
         <div>
           <div className="text-tag text-muted-foreground mb-2">
-            Hooks{t.passedHooks.length > 0 ? ' · Group-Chat-Test bestanden' : ''}
+            Hooks{t.passedHooks.length > 0 ? tr(' · Group-Chat-Test bestanden', ' · passed the group chat test') : ''}
           </div>
           <ol className="space-y-2">
             {hooks.map((h, i) => (
@@ -663,20 +675,20 @@ function StrategyPaper() {
           const trends = tinyTrends(t, 3);
           return trends.length > 0 ? (
             <div data-testid="paper-tiny-trends">
-              <div className="text-tag text-muted-foreground mb-2">Trend-Kontext</div>
+              <div className="text-tag text-muted-foreground mb-2">{tr('Trend-Kontext', 'Trend context')}</div>
               <ul className="space-y-2">
-                {trends.map(({ signal: tr }) => (
-                  <li key={tr.id} className="text-sm leading-snug">
-                    <strong>{tr.title}</strong>
-                    <span className="text-muted-foreground"> · {TREND_DOMAINS[tr.domain]} · </span>
-                    {tr.move}{' '}
-                    <a href={tr.sources[0].url} target="_blank" rel="noopener noreferrer" className="text-xs text-muted-foreground underline">
-                      {tr.sources[0].label}, {formatSourceDate(tr.sources[0].date)}
+                {trends.map(({ signal: sig }) => (
+                  <li key={sig.id} className="text-sm leading-snug">
+                    <strong>{sig.title}</strong>
+                    <span className="text-muted-foreground"> · {TREND_DOMAINS[sig.domain]} · </span>
+                    {sig.move}{' '}
+                    <a href={sig.sources[0].url} target="_blank" rel="noopener noreferrer" className="text-xs text-muted-foreground underline">
+                      {sig.sources[0].label}, {formatSourceDate(sig.sources[0].date)}
                     </a>
                   </li>
                 ))}
               </ul>
-              <a href="#/trends" className="font-mono text-tag text-primary hover:underline mt-2 inline-block">Trend-Radar →</a>
+              <a href="#/trends" className="font-mono text-tag text-primary hover:underline mt-2 inline-block">{tr('Trend-Radar →', 'Trend radar →')}</a>
             </div>
           ) : null;
         })()}
@@ -699,7 +711,10 @@ function StrategyPaper() {
         </div>
       </article>
       <p className="font-mono text-xs text-muted-foreground">
-        Felder ohne eigenen Text übernehmen Leos Entwurf. Alles bleibt im Browser — bei Reload weg, also exportieren.
+        {tr(
+          'Felder ohne eigenen Text übernehmen Leos Entwurf. Alles bleibt im Browser — bei Reload weg, also exportieren.',
+          'Fields without your own text use Leo\'s draft. Everything stays in the browser and is gone on reload, so export.',
+        )}
       </p>
     </section>
   );

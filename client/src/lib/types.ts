@@ -1,3 +1,5 @@
+import { localized } from './i18n';
+
 export type ModuleId =
   | 'starter'
   | 'madlibs'
@@ -19,7 +21,7 @@ export const MODULE_ORDER: ModuleId[] = [
   'deepdive',
 ];
 
-export const MODULE_META: Record<
+const MODULE_META_DE: Record<
   ModuleId,
   { number: string; title: string; subtitle: string; description: string }
 > = {
@@ -81,6 +83,45 @@ export const MODULE_META: Record<
   },
 };
 
+const MODULE_META_EN: Record<ModuleId, { subtitle: string; description: string }> = {
+  starter: {
+    subtitle: 'Who you are, what you do, for whom',
+    description: 'The foundation. Five sections: Work, Mission, Audience, Brand, Workflow. Answer straight, no marketing speak.',
+  },
+  madlibs: {
+    subtitle: 'Boil the what down to one sentence',
+    description: 'Fill in the blanks and the sentence builds itself. Write variants. The best one says what you really do.',
+  },
+  product: {
+    subtitle: 'Collect facts, tell the story',
+    description: 'Three sections: facts, story, order. This is where the product becomes tangible.',
+  },
+  casestudy: {
+    subtitle: 'What you have done and what it changed',
+    description: 'Add as many cases as you like. Results count, adjectives do not.',
+  },
+  brief: {
+    subtitle: 'Summary, Company, Audience, Shift, Story, Style',
+    description: 'The classic brief, condensed. Plus the shift: what do they believe today, and what should they believe and do afterwards?',
+  },
+  style: {
+    subtitle: 'How your brand should sound',
+    description: 'Fifty-five adjectives. Pick up to five that attract you and three that put you off.',
+  },
+  copyedit: {
+    subtitle: 'Style guide decisions',
+    description: 'So copy stays consistent. Periods in acronyms, date formats, Oxford comma, all of it. Plus the must-haves for every production.',
+  },
+  deepdive: {
+    subtitle: 'Folklore, misconceptions, momentum',
+    description: 'Optional. Twelve questions for brands with a history. This is the material no competitor can copy.',
+  },
+};
+
+export const MODULE_META = Object.fromEntries(
+  (Object.keys(MODULE_META_DE) as ModuleId[]).map((id) => [id, localized(MODULE_META_DE[id], MODULE_META_EN[id])]),
+) as typeof MODULE_META_DE;
+
 export type QuestionType = 'text' | 'textarea' | 'select' | 'radio';
 
 export type Question = {
@@ -88,6 +129,8 @@ export type Question = {
   label: string;
   type: QuestionType;
   options?: string[];
+  /** Anzeige-Texte zu options in der aktuellen Sprache; die Werte bleiben options */
+  optionLabels?: string[];
   placeholder?: string;
   section?: string;
 };
@@ -110,7 +153,7 @@ export type ModuleState = {
 
 export type TrackId = 'founder' | 'product' | 'agency' | 'refresh';
 
-export const TRACKS: Record<TrackId, {
+const TRACKS_DE: Record<TrackId, {
   id: TrackId;
   code: string;
   name: string;
@@ -151,6 +194,29 @@ export const TRACKS: Record<TrackId, {
     questionCount: 52,
   },
 };
+
+const TRACKS_EN: Record<TrackId, { subtitle: string; description: string }> = {
+  founder: {
+    subtitle: 'Solo, coach, personal brand, athlete',
+    description: 'One person is the brand. You sell yourself: your experience, your stance, your voice.',
+  },
+  product: {
+    subtitle: 'App, tool, physical product, SaaS',
+    description: 'Something new comes to market. A hard what, a clear audience, a clear use case.',
+  },
+  agency: {
+    subtitle: 'Service provider, creative studio, consultancy',
+    description: 'You sell expertise, not units. Case studies, pitch logic, niche authority.',
+  },
+  refresh: {
+    subtitle: 'Established brand, repositioning, audit',
+    description: 'Already exists and wants to reorder itself. Has data, has history, has baggage.',
+  },
+};
+
+export const TRACKS = Object.fromEntries(
+  (Object.keys(TRACKS_DE) as TrackId[]).map((id) => [id, localized(TRACKS_DE[id], TRACKS_EN[id])]),
+) as typeof TRACKS_DE;
 
 // ---------- Tiny Mode (leo-tiny-framework.md) ----------
 

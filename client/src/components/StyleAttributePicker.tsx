@@ -1,5 +1,6 @@
 import { useSession } from '@/lib/session-store';
 import { STYLE_ATTRIBUTES } from '@/lib/questions';
+import { tr, getLang } from '@/lib/i18n';
 
 type Mode = 'attract' | 'avoid';
 
@@ -30,7 +31,7 @@ export function StyleAttributePicker({ mode }: { mode: Mode }) {
     <div className="space-y-4" data-testid={`style-picker-${mode}`}>
       <div className="flex items-baseline justify-between">
         <h3 className="font-serif text-2xl">
-          {isAttract ? 'Anziehen' : 'Abstoßen'}
+          {isAttract ? tr('Anziehen', 'Attract') : tr('Abstoßen', 'Repel')}
         </h3>
         <span className="font-mono text-tag text-muted-foreground" data-testid={`count-${mode}`}>
           {selected.length} / {limit}
@@ -38,8 +39,8 @@ export function StyleAttributePicker({ mode }: { mode: Mode }) {
       </div>
       <p className="text-sm text-muted-foreground">
         {isAttract
-          ? 'Wie soll deine Marke klingen? Wähle bis zu fünf Adjektive.'
-          : 'Was passt explizit NICHT zu dir? Wähle bis zu drei.'}
+          ? tr('Wie soll deine Marke klingen? Wähle bis zu fünf Adjektive.', 'How should your brand sound? Pick up to five adjectives.')
+          : tr('Was passt explizit NICHT zu dir? Wähle bis zu drei.', 'What explicitly does NOT fit you? Pick up to three.')}
       </p>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
@@ -62,10 +63,10 @@ export function StyleAttributePicker({ mode }: { mode: Mode }) {
                   : 'border-border bg-card text-foreground'
               } ${isDisabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}`}
             >
-              <div className="font-serif text-base leading-tight">{de}</div>
-              <div className="font-mono text-[10px] uppercase tracking-wider opacity-60 mt-1">
-                {en}
-              </div>
+              <div className="font-serif text-base leading-tight">{getLang() === 'en' ? en : de}</div>
+              {getLang() === 'de' && (
+                <div className="font-mono text-[10px] uppercase tracking-wider opacity-60 mt-1">{en}</div>
+              )}
             </button>
           );
         })}

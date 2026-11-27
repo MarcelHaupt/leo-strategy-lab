@@ -1,6 +1,8 @@
 import type { Principle } from './types';
+import { localized } from './i18n';
+import { PRINCIPLES_EN } from './playbook.en';
 
-export const PRINCIPLES: Principle[] = [
+const PRINCIPLES_DE: Principle[] = [
   {
     id: 'P01',
     name: 'Smartly Unpolished',
@@ -417,6 +419,18 @@ export const PRINCIPLES: Principle[] = [
     },
   },
 ];
+
+// Englische Fassung als Getter darüber; Stichworte beider Sprachen werden immer gematcht
+export const PRINCIPLES: Principle[] = PRINCIPLES_DE.map((p) => {
+  const en = PRINCIPLES_EN[p.id];
+  const base: Principle = {
+    ...p,
+    triggers: [...p.triggers, ...(en?.triggersEn ?? [])],
+    antiTriggers: [...p.antiTriggers, ...(en?.antiTriggersEn ?? [])],
+    signal2027: p.signal2027 && localized(p.signal2027, en?.signal2027 ? { text: en.signal2027 } : undefined),
+  };
+  return localized(base, en ? { name: en.name, rule: en.rule, leosCheck: en.leosCheck } : undefined);
+});
 
 export const PRINCIPLES_BY_ID: Record<string, Principle> = Object.fromEntries(
   PRINCIPLES.map((p) => [p.id, p]),

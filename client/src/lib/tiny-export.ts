@@ -1,6 +1,7 @@
 import type { SessionState, CrispKey } from './types';
 import { PRINCIPLES_BY_ID } from './playbook';
 import { downloadFile } from './export';
+import { tr, dateLocale } from './i18n';
 import { tinyTrends } from './trend-context';
 import { TREND_DOMAINS, formatSourceDate } from './trends';
 import {
@@ -37,30 +38,30 @@ export function tinyToMarkdown(s: SessionState): string {
   const hooks = paperHooks(s);
   const formats = tinyFormats(t);
   const principles = activePrinciples(t);
-  const date = new Date().toLocaleDateString('de-DE');
+  const date = new Date().toLocaleDateString(dateLocale());
   const L: string[] = [];
 
   L.push(`# Strategy Paper — ${s.projectName || topicOf(t)}`);
   L.push(`**Tiny Framework** · ${s.clientName || '—'} · ${date}`);
   L.push('');
-  L.push(`**Ziel:** ${t.goal ? TINY_GOALS[t.goal].label : '—'}  `);
-  L.push(`**Plattform:** ${t.platforms.join(', ') || '—'}  `);
-  L.push(`**Für wen:** ${t.audience || '—'}  `);
-  L.push(`**Grenze:** ${t.constraint || '—'}`);
+  L.push(`**${tr('Ziel', 'Goal')}:** ${t.goal ? TINY_GOALS[t.goal].label : '—'}  `);
+  L.push(`**${tr('Plattform', 'Platform')}:** ${t.platforms.join(', ') || '—'}  `);
+  L.push(`**${tr('Für wen', 'For whom')}:** ${t.audience || '—'}  `);
+  L.push(`**${tr('Grenze', 'Constraint')}:** ${t.constraint || '—'}`);
   L.push('');
   L.push('## Problem');
   L.push(problemSentence(t) || '—');
-  if (t.problemType) L.push(`_Problemtyp: ${t.problemType}_`);
+  if (t.problemType) L.push(`_${tr('Problemtyp', 'Problem type')}: ${t.problemType}_`);
   L.push('');
   if (t.shiftNow.trim() || t.shiftNext.trim()) {
     L.push('## Shift');
-    L.push(`**Heute glauben sie:** ${t.shiftNow.trim() || '—'}  `);
-    L.push(`**Danach sollen sie glauben:** ${t.shiftNext.trim() || '—'}  `);
-    if (t.shiftAction.trim()) L.push(`**Handlung:** ${t.shiftAction.trim()}  `);
-    if (t.shiftOneThing.trim()) L.push(`**Der eine Satz:** ${t.shiftOneThing.trim()}`);
+    L.push(`**${tr('Heute glauben sie', 'Today they believe')}:** ${t.shiftNow.trim() || '—'}  `);
+    L.push(`**${tr('Danach sollen sie glauben', 'Afterwards they should believe')}:** ${t.shiftNext.trim() || '—'}  `);
+    if (t.shiftAction.trim()) L.push(`**${tr('Handlung', 'Action')}:** ${t.shiftAction.trim()}  `);
+    if (t.shiftOneThing.trim()) L.push(`**${tr('Der eine Satz', 'The one sentence')}:** ${t.shiftOneThing.trim()}`);
     L.push('');
   }
-  L.push('## Playbook-Leitplanken');
+  L.push(tr('## Playbook-Leitplanken', '## Playbook Guardrails'));
   principles.forEach((id) => {
     const p = PRINCIPLES_BY_ID[id];
     if (p) L.push(`- **${p.id} ${p.name}** — ${p.leosCheck}`);
@@ -72,20 +73,20 @@ export function tinyToMarkdown(s: SessionState): string {
     L.push(`   ${h.emotion} · ${h.mechanic} · _${h.principleId}_`);
   });
   L.push('');
-  L.push('## Format-Mechanik');
+  L.push(tr('## Format-Mechanik', '## Format Mechanics'));
   formats.forEach((f) => {
     L.push(`### ${f.name}`);
     L.push(f.mechanic);
-    L.push(`- Rhythmus: ${f.cadence}`);
+    L.push(`- ${tr('Rhythmus', 'Rhythm')}: ${f.cadence}`);
     L.push(`- Reason to return: ${f.reasonToReturn}`);
-    L.push(`- Prinzipien: ${f.principles.join(', ')}`);
+    L.push(`- ${tr('Prinzipien', 'Principles')}: ${f.principles.join(', ')}`);
     L.push('');
   });
   const trends = tinyTrends(t, 3);
   if (trends.length > 0) {
-    L.push('## Trend-Kontext');
-    trends.forEach(({ signal: tr }) => {
-      L.push(`- **${tr.title}** (${TREND_DOMAINS[tr.domain]}): ${tr.move} _Quelle: [${tr.sources[0].label}](${tr.sources[0].url}), ${formatSourceDate(tr.sources[0].date)}_`);
+    L.push(tr('## Trend-Kontext', '## Trend Context'));
+    trends.forEach(({ signal: sig }) => {
+      L.push(`- **${sig.title}** (${TREND_DOMAINS[sig.domain]}): ${sig.move} _${tr('Quelle', 'Source')}: [${sig.sources[0].label}](${sig.sources[0].url}), ${formatSourceDate(sig.sources[0].date)}_`);
     });
     L.push('');
   }

@@ -6,6 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { SessionProvider } from '@/lib/session-store';
+import { LangProvider } from '@/lib/i18n';
 import { SessionHeader } from '@/components/SessionHeader';
 import { SiteFooter } from '@/components/SiteFooter';
 import NotFound from '@/pages/not-found';
@@ -48,9 +49,11 @@ function App() {
         <SessionProvider>
           <TooltipProvider>
             <Toaster />
-            <Router hook={useHashLocation}>
-              <AppRouter />
-            </Router>
+            <LangProvider>
+              <Router hook={useHashLocation}>
+                <AppRouter />
+              </Router>
+            </LangProvider>
           </TooltipProvider>
         </SessionProvider>
       </ThemeProvider>

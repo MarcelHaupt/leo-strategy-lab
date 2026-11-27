@@ -4,6 +4,7 @@ import { useSession } from '@/lib/session-store';
 import { TrendCard } from '@/components/TrendCard';
 import { activeSignals, RADAR_SOURCES, TREND_DOMAINS, type TrendDomain } from '@/lib/trends';
 import { sessionTrends, tinyTrends } from '@/lib/trend-context';
+import { tr } from '@/lib/i18n';
 
 export default function Trends() {
   const { state } = useSession();
@@ -29,16 +30,17 @@ export default function Trends() {
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 py-12 space-y-12">
       <div className="border-b border-border pb-10">
-        <div className="text-tag text-muted-foreground">TREND-RADAR</div>
+        <div className="text-tag text-muted-foreground">{tr('TREND-RADAR', 'TREND RADAR')}</div>
         <h1 className="font-serif text-5xl md:text-7xl leading-[0.9] mt-2 tracking-tight">
-          {signals.length} Signale.
+          {signals.length} {tr('Signale.', 'signals.')}
           <br />
-          <span className="italic text-primary">Keine Hypes.</span>
+          <span className="italic text-primary">{tr('Keine Hypes.', 'No hype.')}</span>
         </h1>
         <p className="text-sm md:text-base text-muted-foreground mt-4 max-w-2xl leading-relaxed">
-          Aus {sourceCount} Reports, Studien und Nischenquellen, von Plattformdaten bis Marktforschung, von Handel bis
-          Gesundheit. Jedes Signal hat eine Quelle, ein Datum und ein Ablaufdatum. Was abgelaufen ist, fliegt automatisch
-          raus. Die Punkte zeigen, wie viele Reports dasselbe Muster belegen. Trends sind Kontext, keine Strategie.
+          {tr(
+            `Aus ${sourceCount} Reports, Studien und Nischenquellen, von Plattformdaten bis Marktforschung, von Handel bis Gesundheit. Jedes Signal hat eine Quelle, ein Datum und ein Ablaufdatum. Was abgelaufen ist, fliegt automatisch raus. Die Punkte zeigen, wie viele Reports dasselbe Muster belegen. Trends sind Kontext, keine Strategie.`,
+            `From ${sourceCount} reports, studies and niche sources, from platform data to market research, from retail to health. Every signal has a source, a date and an expiry date. Whatever has expired drops out automatically. The dots show how many reports back the same pattern. Trends are context, not strategy.`,
+          )}
         </p>
       </div>
 
@@ -46,10 +48,10 @@ export default function Trends() {
         <section className="space-y-4" data-testid="section-trend-matches">
           <div className="flex items-baseline justify-between gap-4 flex-wrap">
             <h2 className="font-serif text-3xl tracking-tight">
-              Passt zu <span className="italic text-primary">{state.projectName || state.tiny.topic || 'deinem Projekt'}</span>
+              {tr('Passt zu', 'Fits')} <span className="italic text-primary">{state.projectName || state.tiny.topic || tr('deinem Projekt', 'your project')}</span>
             </h2>
             <span className="font-mono text-tag text-muted-foreground">
-              aus {hasSession ? 'deiner Session' : 'deinem Tiny-Briefing'}
+              {hasSession ? tr('aus deiner Session', 'from your session') : tr('aus deinem Tiny-Briefing', 'from your Tiny briefing')}
             </span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-border border border-border">
@@ -75,7 +77,7 @@ export default function Trends() {
                 data-testid={`button-trend-domain-${d}`}
                 aria-pressed={on}
               >
-                {d === 'alle' ? `Alle · ${signals.length}` : `${TREND_DOMAINS[d]} · ${counts[d] ?? 0}`}
+                {d === 'alle' ? `${tr('Alle', 'All')} · ${signals.length}` : `${TREND_DOMAINS[d]} · ${counts[d] ?? 0}`}
               </button>
             );
           })}
@@ -90,12 +92,15 @@ export default function Trends() {
 
       <section className="border-t border-border pt-10 space-y-4" data-testid="section-radar-sources">
         <div>
-          <div className="text-tag text-muted-foreground">RADAR-QUELLEN</div>
+          <div className="text-tag text-muted-foreground">{tr('RADAR-QUELLEN', 'RADAR SOURCES')}</div>
           <h2 className="font-serif text-3xl tracking-tight mt-1">
-            Wo neue Signale <span className="italic text-primary">herkommen</span>
+            {tr('Wo neue Signale', 'Where new signals')} <span className="italic text-primary">{tr('herkommen', 'come from')}</span>
           </h2>
           <p className="text-sm text-muted-foreground mt-2 max-w-2xl">
-            Tools für den Alltag, Newsletter für die Nische, Jahresreports für den Rahmen. Einmal pro Quartal durchgehen.
+            {tr(
+              'Tools für den Alltag, Newsletter für die Nische, Jahresreports für den Rahmen. Einmal pro Quartal durchgehen.',
+              'Tools for everyday use, newsletters for the niche, annual reports for the big picture. Go through them once a quarter.',
+            )}
           </p>
         </div>
         <ul className="divide-y divide-border border-y border-border">
@@ -119,10 +124,10 @@ export default function Trends() {
       </section>
 
       <div className="border-t border-border pt-6 flex items-center justify-between gap-4 flex-wrap">
-        <span className="text-tag text-muted-foreground">Recherche-Stand: Oktober 2026</span>
+        <span className="text-tag text-muted-foreground">{tr('Recherche-Stand: November 2026', 'Research as of: November 2026')}</span>
         <Link href={hasSession ? '/report' : '/tiny'} data-testid="link-trends-back">
           <a className="font-mono uppercase text-sm text-primary hover:underline">
-            {hasSession ? 'Zum Report →' : 'Zum Tiny Mode →'}
+            {hasSession ? tr('Zum Report →', 'To the report →') : tr('Zum Tiny Mode →', 'To Tiny Mode →')}
           </a>
         </Link>
       </div>

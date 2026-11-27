@@ -1,5 +1,6 @@
 import { PRINCIPLES_BY_ID, MODULE_PRINCIPLES } from '@/lib/playbook';
 import type { ModuleId } from '@/lib/types';
+import { tr } from '@/lib/i18n';
 
 export function PrinciplesPanel({ moduleId }: { moduleId: ModuleId }) {
   const ids = MODULE_PRINCIPLES[moduleId] ?? [];
@@ -8,7 +9,7 @@ export function PrinciplesPanel({ moduleId }: { moduleId: ModuleId }) {
   return (
     <aside className="space-y-4" data-testid="panel-principles">
       <div className="text-tag text-muted-foreground border-b border-border pb-2">
-        Aktive Prinzipien
+        {tr('Aktive Prinzipien', 'Active principles')}
       </div>
       <div className="space-y-3">
         {ids.map((id) => {
@@ -30,7 +31,7 @@ export function PrinciplesPanel({ moduleId }: { moduleId: ModuleId }) {
               </p>
               {p.signal2027 && (
                 <p className="text-xs mt-2 leading-relaxed" data-testid={`principle-signal-${id}`}>
-                  <span className="font-mono text-[10px] uppercase tracking-wider text-primary">2027 Signal · </span>
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-primary">{tr('2027 Signal', '2027 signal')} · </span>
                   {p.signal2027.text}{' '}
                   <span className="text-muted-foreground">({p.signal2027.source})</span>
                 </p>

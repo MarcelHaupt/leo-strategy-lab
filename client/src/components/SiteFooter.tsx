@@ -1,3 +1,5 @@
+import { LangSwitch } from './LangSwitch';
+
 export function SiteFooter() {
   return (
     <footer
@@ -17,6 +19,8 @@ export function SiteFooter() {
             >
               info@marcelhaupt.com
             </a>
+            <span className="hidden md:inline">·</span>
+            <LangSwitch />
             <span className="hidden md:inline">·</span>
             <a
               href="tel:+491627083570"

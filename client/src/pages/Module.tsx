@@ -12,6 +12,7 @@ import { StyleAttributePicker } from '@/components/StyleAttributePicker';
 import { Button } from '@/components/ui/button';
 import { LeoComment } from '@/components/LeoComment';
 import { provocations } from '@/lib/leo-provocations';
+import { tr } from '@/lib/i18n';
 
 const VALID_IDS: ModuleId[] = MODULE_ORDER;
 
@@ -38,7 +39,7 @@ export default function Module() {
   const sections = useMemo(() => {
     const map = new Map<string, typeof questions>();
     for (const q of questions) {
-      const sec = q.section ?? 'Fragen';
+      const sec = q.section ?? tr('Fragen', 'Questions');
       if (!map.has(sec)) map.set(sec, []);
       map.get(sec)!.push(q);
     }
@@ -49,9 +50,9 @@ export default function Module() {
   if (!isValid || !meta || !mod) {
     return (
       <div className="mx-auto max-w-3xl px-6 py-24">
-        <h1 className="font-serif text-4xl">Modul nicht gefunden</h1>
+        <h1 className="font-serif text-4xl">{tr('Modul nicht gefunden', 'Module not found')}</h1>
         <Link href="/modules">
-          <a className="font-mono text-sm text-primary mt-4 inline-block">← Zurück zur Übersicht</a>
+          <a className="font-mono text-sm text-primary mt-4 inline-block">{tr('← Zurück zur Übersicht', '← Back to overview')}</a>
         </Link>
       </div>
     );
@@ -79,7 +80,7 @@ export default function Module() {
           <div>
             <div className="flex items-baseline gap-3">
               <span className="font-mono text-tag text-muted-foreground">
-                MODUL {String(moduleNumberInTrack).padStart(2, '0')} / {String(trackTotal).padStart(2, '0')}
+                {tr('MODUL', 'MODULE')} {String(moduleNumberInTrack).padStart(2, '0')} / {String(trackTotal).padStart(2, '0')}
               </span>
               <span
                 className={`font-mono text-tag ${
@@ -90,7 +91,7 @@ export default function Module() {
                       : 'text-muted-foreground'
                 }`}
               >
-                {prog.status === 'done' ? 'ABGESCHLOSSEN' : prog.status === 'partial' ? 'TEILWEISE' : 'OFFEN'}
+                {prog.status === 'done' ? tr('ABGESCHLOSSEN', 'DONE') : prog.status === 'partial' ? tr('TEILWEISE', 'PARTIAL') : tr('OFFEN', 'OPEN')}
               </span>
             </div>
             <h1
@@ -103,7 +104,7 @@ export default function Module() {
           </div>
           <Link href="/modules" data-testid="link-back-modules">
             <a className="font-mono text-tag text-muted-foreground hover:text-primary">
-              ← ÜBERSICHT
+              {tr('← ÜBERSICHT', '← OVERVIEW')}
             </a>
           </Link>
         </div>
@@ -165,7 +166,7 @@ export default function Module() {
             ) : (
               <Link href="/modules" data-testid="link-back">
                 <a className="font-mono text-tag text-muted-foreground hover:text-primary">
-                  ← Zurück
+                  {tr('← Zurück', '← Back')}
                 </a>
               </Link>
             )}
@@ -175,7 +176,7 @@ export default function Module() {
               className="font-mono uppercase text-sm tracking-widest"
               data-testid="button-finish-module"
             >
-              {next ? `Modul abschließen → ${MODULE_META[next].number} ${MODULE_META[next].title}` : 'Modul abschließen → Report'}
+              {next ? `${tr('Modul abschließen', 'Finish module')} → ${MODULE_META[next].number} ${MODULE_META[next].title}` : tr('Modul abschließen → Report', 'Finish module → Report')}
             </Button>
           </div>
         </div>
@@ -189,7 +190,7 @@ export default function Module() {
                 const qs = provocations(state, id!, 2);
                 return qs.length > 0 ? (
                   <div className="space-y-3" data-testid="panel-provocations">
-                    <div className="text-tag text-muted-foreground border-b border-border pb-2">Leo stört</div>
+                    <div className="text-tag text-muted-foreground border-b border-border pb-2">{tr('Leo stört', 'Leo interrupts')}</div>
                     {qs.map((c, i) => (
                       <LeoComment key={i} item={c} />
                     ))}

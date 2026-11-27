@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Download, FileJson } from 'lucide-react';
 import { useSession } from '@/lib/session-store';
 import { exportMarkdown, exportJSON } from '@/lib/export';
+import { tr } from '@/lib/i18n';
 
 export function ExportPanel() {
   const { state } = useSession();
@@ -10,9 +11,9 @@ export function ExportPanel() {
     <div className="border border-border bg-card p-6 space-y-5" data-testid="panel-export">
       <div>
         <div className="text-tag text-muted-foreground">EXPORT</div>
-        <h3 className="font-serif text-2xl mt-2 leading-tight">Den Report mitnehmen</h3>
+        <h3 className="font-serif text-2xl mt-2 leading-tight">{tr('Den Report mitnehmen', 'Take the report with you')}</h3>
         <p className="text-sm text-muted-foreground mt-2">
-          Alles bleibt in deinem Browser. Bei Reload weg. Markdown zum Lesen, JSON für späteren Import.
+          {tr('Alles bleibt in deinem Browser. Bei Reload weg. Markdown zum Lesen, JSON für späteren Import.', 'Everything stays in your browser and is gone on reload. Markdown for reading, JSON for importing later.')}
         </p>
       </div>
 

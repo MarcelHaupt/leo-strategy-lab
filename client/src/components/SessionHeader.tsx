@@ -5,6 +5,8 @@ import { sessionScore } from '@/lib/leo-engine';
 import { Logo } from './Logo';
 import { ThemeToggle } from './ThemeToggle';
 import { TRACKS, type TrackId } from '@/lib/types';
+import { tr } from '@/lib/i18n';
+import { LangSwitch } from './LangSwitch';
 
 export function SessionHeader() {
   const { state, dispatch } = useSession();
@@ -52,7 +54,7 @@ export function SessionHeader() {
                   : 'text-muted-foreground'
               }`}
             >
-              Module
+              {tr('Module', 'Modules')}
             </a>
           </Link>
           <Link href="/report" data-testid="link-report">
@@ -103,7 +105,7 @@ export function SessionHeader() {
                 data-testid="button-track-switcher"
                 aria-haspopup="true"
                 aria-expanded={trackOpen}
-                title="Track wechseln"
+                title={tr('Track wechseln', 'Switch track')}
               >
                 <span className="text-muted-foreground">TRACK · </span>
                 <span className="text-primary">{trackMeta.name}</span>
@@ -114,9 +116,9 @@ export function SessionHeader() {
                   data-testid="popover-track"
                 >
                   <div className="p-3 border-b border-border">
-                    <div className="font-mono text-tag text-muted-foreground">TRACK WECHSELN</div>
+                    <div className="font-mono text-tag text-muted-foreground">{tr('TRACK WECHSELN', 'SWITCH TRACK')}</div>
                     <p className="text-xs text-foreground/70 mt-1 leading-relaxed">
-                      Beim Wechsel bleiben deine Antworten erhalten. Manche Fragen werden ausgeblendet, andere kommen dazu.
+                      {tr('Beim Wechsel bleiben deine Antworten erhalten. Manche Fragen werden ausgeblendet, andere kommen dazu.', 'Your answers stay when you switch. Some questions are hidden, others are added.')}
                     </p>
                   </div>
                   <ul className="divide-y divide-border">
@@ -144,7 +146,7 @@ export function SessionHeader() {
                                 {t.code}
                               </span>
                               {isActive && (
-                                <span className="font-mono text-tag text-primary">AKTIV</span>
+                                <span className="font-mono text-tag text-primary">{tr('AKTIV', 'ACTIVE')}</span>
                               )}
                             </div>
                             <div className="font-serif text-lg mt-1">{t.name}</div>
@@ -163,7 +165,7 @@ export function SessionHeader() {
           {hasSession && (
             <div className="hidden sm:flex flex-col items-end leading-tight">
               <div className="text-tag text-muted-foreground" data-testid="text-client-name">
-                {state.clientName || 'unbekannt'}
+                {state.clientName || tr('unbekannt', 'unknown')}
               </div>
               <div className="font-mono text-xs text-foreground" data-testid="text-project-name">
                 {state.projectName || '—'}
@@ -179,6 +181,7 @@ export function SessionHeader() {
               {score} / 100
             </div>
           )}
+          <LangSwitch className="h-9 items-stretch" />
           <ThemeToggle />
         </div>
       </div>

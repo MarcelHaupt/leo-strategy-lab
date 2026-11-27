@@ -1,4 +1,5 @@
 import { useSession } from '@/lib/session-store';
+import { getLang, tr } from '@/lib/i18n';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -16,30 +17,68 @@ type Field = {
   options?: string[];
 };
 
-const sentence1Fields: (Field | string)[] = [
-  { id: 'product_name', type: 'text', placeholder: 'Produktname', width: 'w-44' },
-  { id: 'helps_lets', type: 'select', options: ['hilft', 'lässt'], width: 'w-28' },
-  { id: 'audience_noun', type: 'text', placeholder: 'Athleten', width: 'w-40' },
-  { id: 'verb1', type: 'text', placeholder: 'trainieren', width: 'w-36' },
-  'und',
-  { id: 'verb2', type: 'text', placeholder: 'dokumentieren', width: 'w-44' },
-  { id: 'object', type: 'text', placeholder: 'ihre Performance', width: 'w-52' },
-  ', damit sie',
-  { id: 'verb3', type: 'text', placeholder: 'wachsen', width: 'w-32' },
-  { id: 'adverb', type: 'text', placeholder: 'ohne Plateau', width: 'w-44' },
-  'können.',
-];
+type Part = Field | string;
 
-const sentence2Fields: (Field | string)[] = [
-  { id: 'signup_join', type: 'select', options: ['Registriere dich für', 'Werde Teil von'], width: 'w-56' },
-  { id: 'product_name_2', type: 'text', placeholder: 'Produktname', width: 'w-44' },
-  ', um',
-  { id: 'verb4', type: 'text', placeholder: 'teilen', width: 'w-32' },
-  { id: 'plural_noun', type: 'text', placeholder: 'Trainings', width: 'w-36' },
-  'mit',
-  { id: 'secondary_audience', type: 'text', placeholder: 'Coaches', width: 'w-40' },
-  'zu.',
-];
+const sentence1Fields = (): Part[] =>
+  getLang() === 'en'
+    ? [
+        { id: 'product_name', type: 'text', placeholder: 'Product name', width: 'w-44' },
+        { id: 'helps_lets', type: 'select', options: ['hilft', 'lässt'], width: 'w-28' },
+        { id: 'audience_noun', type: 'text', placeholder: 'athletes', width: 'w-40' },
+        { id: 'verb1', type: 'text', placeholder: 'train', width: 'w-36' },
+        'and',
+        { id: 'verb2', type: 'text', placeholder: 'document', width: 'w-44' },
+        { id: 'object', type: 'text', placeholder: 'their performance', width: 'w-52' },
+        'so they can',
+        { id: 'verb3', type: 'text', placeholder: 'grow', width: 'w-32' },
+        { id: 'adverb', type: 'text', placeholder: 'without plateaus', width: 'w-44' },
+        '.',
+      ]
+    : [
+        { id: 'product_name', type: 'text', placeholder: 'Produktname', width: 'w-44' },
+        { id: 'helps_lets', type: 'select', options: ['hilft', 'lässt'], width: 'w-28' },
+        { id: 'audience_noun', type: 'text', placeholder: 'Athleten', width: 'w-40' },
+        { id: 'verb1', type: 'text', placeholder: 'trainieren', width: 'w-36' },
+        'und',
+        { id: 'verb2', type: 'text', placeholder: 'dokumentieren', width: 'w-44' },
+        { id: 'object', type: 'text', placeholder: 'ihre Performance', width: 'w-52' },
+        ', damit sie',
+        { id: 'verb3', type: 'text', placeholder: 'wachsen', width: 'w-32' },
+        { id: 'adverb', type: 'text', placeholder: 'ohne Plateau', width: 'w-44' },
+        'können.',
+      ];
+
+const sentence2Fields = (): Part[] =>
+  getLang() === 'en'
+    ? [
+        { id: 'signup_join', type: 'select', options: ['Registriere dich für', 'Werde Teil von'], width: 'w-56' },
+        { id: 'product_name_2', type: 'text', placeholder: 'Product name', width: 'w-44' },
+        'to',
+        { id: 'verb4', type: 'text', placeholder: 'share', width: 'w-32' },
+        { id: 'plural_noun', type: 'text', placeholder: 'workouts', width: 'w-36' },
+        'with',
+        { id: 'secondary_audience', type: 'text', placeholder: 'coaches', width: 'w-40' },
+        '.',
+      ]
+    : [
+        { id: 'signup_join', type: 'select', options: ['Registriere dich für', 'Werde Teil von'], width: 'w-56' },
+        { id: 'product_name_2', type: 'text', placeholder: 'Produktname', width: 'w-44' },
+        ', um',
+        { id: 'verb4', type: 'text', placeholder: 'teilen', width: 'w-32' },
+        { id: 'plural_noun', type: 'text', placeholder: 'Trainings', width: 'w-36' },
+        'mit',
+        { id: 'secondary_audience', type: 'text', placeholder: 'Coaches', width: 'w-40' },
+        'zu.',
+      ];
+
+/** Anzeige der deutschen Optionswerte in der aktuellen Sprache */
+const OPTION_EN: Record<string, string> = {
+  hilft: 'helps',
+  lässt: 'lets',
+  'Registriere dich für': 'Sign up for',
+  'Werde Teil von': 'Join',
+};
+const optLabel = (o: string) => (getLang() === 'en' ? OPTION_EN[o] ?? o : o);
 
 function FieldInput({ f }: { f: Field }) {
   const { state, dispatch } = useSession();
@@ -63,7 +102,7 @@ function FieldInput({ f }: { f: Field }) {
           <SelectContent>
             {f.options.map((opt) => (
               <SelectItem key={opt} value={opt}>
-                {opt}
+                {optLabel(opt)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -85,7 +124,7 @@ function FieldInput({ f }: { f: Field }) {
   );
 }
 
-function renderSentence(parts: (Field | string)[], key: string) {
+function renderSentence(parts: Part[], key: string) {
   return (
     <p
       key={key}
@@ -114,17 +153,17 @@ export function MadLibsBlock() {
   return (
     <div className="space-y-12">
       <p className="text-tag text-muted-foreground">
-        Tipp: Schreibe mehrere Varianten. Die beste verdichtet, was du wirklich tust.
+        {tr('Tipp: Schreibe mehrere Varianten. Die beste verdichtet, was du wirklich tust.', 'Tip: write several variants. The best one sums up what you really do.')}
       </p>
 
       <div className="space-y-4">
-        <div className="text-tag text-muted-foreground">SATZ 01</div>
-        {renderSentence(sentence1Fields, 'sentence1')}
+        <div className="text-tag text-muted-foreground">{tr('SATZ 01', 'SENTENCE 01')}</div>
+        {renderSentence(sentence1Fields(), 'sentence1')}
       </div>
 
       <div className="space-y-4">
-        <div className="text-tag text-muted-foreground">SATZ 02</div>
-        {renderSentence(sentence2Fields, 'sentence2')}
+        <div className="text-tag text-muted-foreground">{tr('SATZ 02', 'SENTENCE 02')}</div>
+        {renderSentence(sentence2Fields(), 'sentence2')}
       </div>
     </div>
   );

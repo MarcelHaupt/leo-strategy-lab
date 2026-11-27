@@ -1,6 +1,8 @@
 import type { Question, ModuleId } from './types';
+import { localized, getLang } from './i18n';
+import { QUESTIONS_EN, sectionEn } from './questions.en';
 
-export const QUESTIONS: Record<ModuleId, Question[]> = {
+const QUESTIONS_DE: Record<ModuleId, Question[]> = {
   starter: [
     // Work
     { id: 'work_what', label: 'In ein bis drei Sätzen: Was machst du oder dein Unternehmen?', type: 'textarea', section: 'Work' },
@@ -142,6 +144,25 @@ export const QUESTIONS: Record<ModuleId, Question[]> = {
     { id: 'dd_momentum', label: 'Wer hat in eurer Kategorie gerade Momentum? Woran liegt das?', type: 'textarea', section: 'Wettbewerb' },
   ],
 };
+
+export const QUESTIONS = Object.fromEntries(
+  Object.entries(QUESTIONS_DE).map(([mid, qs]) => [
+    mid,
+    qs.map((q) => localized({ ...q, optionLabels: q.options }, { ...QUESTIONS_EN[q.id], section: sectionEn(q.section) })),
+  ]),
+) as Record<ModuleId, Question[]>;
+
+/** Anzeige-Text einer Antwortoption (der gespeicherte Wert bleibt die deutsche Option) */
+export function optionLabel(q: Pick<Question, 'options' | 'optionLabels'>, value: string): string {
+  const i = q.options?.indexOf(value) ?? -1;
+  return i >= 0 && q.optionLabels?.[i] ? q.optionLabels[i] : value;
+}
+
+/** Anzeige eines gespeicherten (deutschen) Stil-Adjektivs in der aktuellen Sprache */
+export function styleLabel(de: string): string {
+  if (getLang() !== 'en') return de;
+  return STYLE_ATTRIBUTES.find((a) => a.de === de)?.en ?? de;
+}
 
 // Style attributes — 55 adjectives, German + English original
 export const STYLE_ATTRIBUTES: { de: string; en: string }[] = [
